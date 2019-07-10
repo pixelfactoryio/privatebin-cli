@@ -1,0 +1,42 @@
+#!/usr/bin/env node
+
+'use strict';
+
+const yargs = require('yargs');
+const {
+    privatebin
+} = require('../lib/privatebin')
+
+const argv = yargs
+    .option('url', {
+        alias: 'u',
+        default: 'https://privatebin.net',
+        describe: 'PrivateBin host'
+    })
+    .option('text', {
+        alias: 't',
+        describe: 'Paste text',
+    })
+    .option('expire', {
+        alias: 'e',
+        describe: 'Paste expire time ["5min", "10min", "1hour", "1day", "1week", "1month", "1year", "never"]',
+        default: '1week'
+    })
+    .option('burnafterreading', {
+        describe: 'Enable Burn After Reading',
+        default: false
+    })
+    .option('opendiscussion', {
+        describe: 'Enable Discussion',
+        default: false
+    })
+    .help()
+    .argv
+
+privatebin(argv.url, argv.text, "", {
+        expire: argv.expire,
+        burnafterreading: argv.burnafterreading,
+        opendiscussion: argv.opendiscussion
+    })
+    .then(paste => console.log(paste))
+    .catch(error => console.log(error));
