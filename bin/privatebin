@@ -1,42 +1,20 @@
 #!/usr/bin/env node
 
-'use strict';
+const privatebinCli = require('commander');
+const { privatebin } = require('../lib/privatebin');
 
-const yargs = require('yargs');
-const {
-    privatebin
-} = require('../lib/privatebin')
+privatebinCli
+  .version('0.0.1')
+  .option('-u, --url <string>', 'PrivateBin host', 'https://privatebin.net')
+  .option('-t, --text <string>', 'Text to paste')
+  .option('-e, --expire <string>', 'Paste expire time [5min, 10min, 1hour, 1day, 1week, 1month, 1year, never]', '1week')
+  .option('--burnafterreading', 'PrivateBin host', false)
+  .option('--opendiscussion', 'PrivateBin host', false)
+  .parse(process.argv);
 
-const argv = yargs
-    .option('url', {
-        alias: 'u',
-        default: 'https://privatebin.net',
-        describe: 'PrivateBin host'
-    })
-    .option('text', {
-        alias: 't',
-        describe: 'Paste text',
-    })
-    .option('expire', {
-        alias: 'e',
-        describe: 'Paste expire time ["5min", "10min", "1hour", "1day", "1week", "1month", "1year", "never"]',
-        default: '1week'
-    })
-    .option('burnafterreading', {
-        describe: 'Enable Burn After Reading',
-        default: false
-    })
-    .option('opendiscussion', {
-        describe: 'Enable Discussion',
-        default: false
-    })
-    .help()
-    .argv
-
-privatebin(argv.url, argv.text, "", {
-        expire: argv.expire,
-        burnafterreading: argv.burnafterreading,
-        opendiscussion: argv.opendiscussion
-    })
-    .then(paste => console.log(paste))
-    .catch(error => console.log(error));
+privatebin(privatebinCli.url, privatebinCli.text, '', {
+  expire: privatebinCli.expire,
+  burnafterreading: privatebinCli.burnafterreading,
+  opendiscussion: privatebinCli.opendiscussion,
+}).then(paste => console.log(paste))
+  .catch(error => console.error(error));
