@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
 const privatebinCli = require('commander');
-const { privatebin } = require('../lib/privatebin');
+const {
+  privatebin
+} = require('../lib/privatebin');
 
 privatebinCli
   .version('0.0.1')
@@ -12,9 +14,13 @@ privatebinCli
   .option('--opendiscussion', 'PrivateBin host', false)
   .parse(process.argv);
 
-privatebin(privatebinCli.url, privatebinCli.text, '', {
-  expire: privatebinCli.expire,
-  burnafterreading: privatebinCli.burnafterreading,
-  opendiscussion: privatebinCli.opendiscussion,
-}).then(paste => console.log(paste))
+const pasteData = Buffer.from(JSON.stringify({
+  paste: privatebinCli.text
+}), 'utf8');
+
+privatebin(privatebinCli.url, pasteData, '', {
+    expire: privatebinCli.expire,
+    burnafterreading: privatebinCli.burnafterreading,
+    opendiscussion: privatebinCli.opendiscussion,
+  }).then(paste => console.log(paste))
   .catch(error => console.error(error));
