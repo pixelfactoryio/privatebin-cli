@@ -3,34 +3,45 @@
 const privatebinCli = require('commander');
 const chalk = require('chalk');
 const yaml = require('js-yaml');
+const fs = require('fs')
 
-const { privatebin } = require('../lib/privatebin');
+const {
+  privatebin
+} = require('../lib/privatebin');
 
 const validateOutput = (val) => {
   if (val.match(/^(json|yaml)$/i)) {
     return val
   }
-  throw new Error(`Invalid Output: ${val}`)
+  throw new Error(`invalid output: ${val}`)
 }
 
 const validateExpire = (val) => {
   if (val.match(/^(5min|10min|1hour|1day|1week|1month|1year|never)$/i)) {
     return val
   }
-  throw new Error(`Invalid Expire: ${val}`)
+  throw new Error(`invalid expire: ${val}`)
 }
-
 
 try {
   privatebinCli
-    .version('0.0.2')
+    .version('0.0.3')
+    .usage('[options] <message>')
     .option('-u, --url <string>', 'PrivateBin host', 'https://privatebin.net')
-    .option('-t, --text <string>', 'Text to paste')
     .option('-e, --expire <string>', 'Paste expire time [5min, 10min, 1hour, 1day, 1week, 1month, 1year, never]', validateExpire, '1week')
     .option('-o, --output [type]', 'Output [json, yaml]', validateOutput)
     .option('--burnafterreading', 'Burn after reading', false)
     .option('--opendiscussion', 'Open discussion', false)
     .parse(process.argv);
+
+  if (process.stdin.isTTY) {
+    privatebinCli.parse(process.argv);
+  } else {
+    const stdinBuffer = fs.readFileSync(0); // STDIN_FILENO = 0
+    privatebinCli.parse(process.argv);
+    privatebinCli.args[0] = stdinBuffer.toString('utf8');
+  }
+
 } catch (e) {
   console.error(chalk `{red ERROR:} ${e.message}\n`);
   privatebinCli.outputHelp(() => privatebinCli.help());
@@ -39,9 +50,8 @@ try {
 
 
 (async () => {
-
   const pasteData = Buffer.from(JSON.stringify({
-    paste: privatebinCli.text
+    paste: privatebinCli.args[0]
   }), 'utf8');
 
   const paste = await privatebin(privatebinCli.url, pasteData, '', {
@@ -49,7 +59,6 @@ try {
     burnafterreading: privatebinCli.burnafterreading,
     opendiscussion: privatebinCli.opendiscussion,
   });
-
 
   switch (privatebinCli.output) {
     case 'json':
@@ -63,5 +72,4 @@ try {
       console.log(chalk `{bold pasteURL:} {greenBright ${paste.url}}`);
       console.log(chalk `{bold deleteURL:} {gray ${paste.deleteUrl}}`);
   }
-
 })();
