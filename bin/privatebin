@@ -1,26 +1,67 @@
 #!/usr/bin/env node
 
 const privatebinCli = require('commander');
-const {
-  privatebin
-} = require('../lib/privatebin');
+const chalk = require('chalk');
+const yaml = require('js-yaml');
 
-privatebinCli
-  .version('0.0.1')
-  .option('-u, --url <string>', 'PrivateBin host', 'https://privatebin.net')
-  .option('-t, --text <string>', 'Text to paste')
-  .option('-e, --expire <string>', 'Paste expire time [5min, 10min, 1hour, 1day, 1week, 1month, 1year, never]', '1week')
-  .option('--burnafterreading', 'PrivateBin host', false)
-  .option('--opendiscussion', 'PrivateBin host', false)
-  .parse(process.argv);
+const { privatebin } = require('../lib/privatebin');
 
-const pasteData = Buffer.from(JSON.stringify({
-  paste: privatebinCli.text
-}), 'utf8');
+const validateOutput = (val) => {
+  if (val.match(/^(json|yaml)$/i)) {
+    return val
+  }
+  throw new Error(`Invalid Output: ${val}`)
+}
 
-privatebin(privatebinCli.url, pasteData, '', {
+const validateExpire = (val) => {
+  if (val.match(/^(5min|10min|1hour|1day|1week|1month|1year|never)$/i)) {
+    return val
+  }
+  throw new Error(`Invalid Expire: ${val}`)
+}
+
+
+try {
+  privatebinCli
+    .version('0.0.2')
+    .option('-u, --url <string>', 'PrivateBin host', 'https://privatebin.net')
+    .option('-t, --text <string>', 'Text to paste')
+    .option('-e, --expire <string>', 'Paste expire time [5min, 10min, 1hour, 1day, 1week, 1month, 1year, never]', validateExpire, '1week')
+    .option('-o, --output [type]', 'Output [json, yaml]', validateOutput)
+    .option('--burnafterreading', 'Burn after reading', false)
+    .option('--opendiscussion', 'Open discussion', false)
+    .parse(process.argv);
+} catch (e) {
+  console.error(chalk `{red ERROR:} ${e.message}\n`);
+  privatebinCli.outputHelp(() => privatebinCli.help());
+  process.exit(1)
+}
+
+
+(async () => {
+
+  const pasteData = Buffer.from(JSON.stringify({
+    paste: privatebinCli.text
+  }), 'utf8');
+
+  const paste = await privatebin(privatebinCli.url, pasteData, '', {
     expire: privatebinCli.expire,
     burnafterreading: privatebinCli.burnafterreading,
     opendiscussion: privatebinCli.opendiscussion,
-  }).then(paste => console.log(paste))
-  .catch(error => console.error(error));
+  });
+
+
+  switch (privatebinCli.output) {
+    case 'json':
+      console.log(JSON.stringify(paste, null, 4))
+      break;
+    case 'yaml':
+      console.log(yaml.dump(paste))
+      break;
+    default:
+      console.log(chalk `{bold pasteId:} ${paste.id}`);
+      console.log(chalk `{bold pasteURL:} {greenBright ${paste.url}}`);
+      console.log(chalk `{bold deleteURL:} {gray ${paste.deleteUrl}}`);
+  }
+
+})();
