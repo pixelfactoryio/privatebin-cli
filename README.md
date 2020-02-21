@@ -1,4 +1,4 @@
-# privatebin-cli
+# Dailyfeats privatebin-cli
 
 ## Install
 
