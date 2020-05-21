@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint . --cache",
-    "test": "tap -J --timeout=300 --reporter=classic",
+    "test": "tap -J --timeout=300 --test-ignore=mock.js",
     "posttest": "tap --coverage-report=text-lcov > coverage.out"
   },
   "dependencies": {
