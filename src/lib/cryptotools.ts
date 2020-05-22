@@ -1,13 +1,15 @@
-import crypto from 'crypto';
+import { pbkdf2Sync, randomBytes, createCipheriv, createDecipheriv, CipherGCMTypes } from 'crypto';
 
-function deriveKey(masterkey, salt, iter) {
+import { Spec, PasteData, Paste } from '../common/types';
+
+export function deriveKey(masterkey: Buffer, salt: Buffer, iter: number): Buffer {
   // derive key: 32 byte key length
-  return crypto.pbkdf2Sync(masterkey, salt, iter, 32, 'sha256');
+  return pbkdf2Sync(masterkey, salt, iter, 32, 'sha256');
 }
 
-export function encrypt(message, masterkey, spec) {
-  const iv = crypto.randomBytes(16);
-  const salt = crypto.randomBytes(8);
+export function encrypt(message: Buffer, masterkey: Buffer, spec: Spec): PasteData {
+  const iv = randomBytes(16);
+  const salt = randomBytes(8);
   const key = deriveKey(masterkey, salt, spec.iter);
   const adata = [
     [
@@ -25,8 +27,10 @@ export function encrypt(message, masterkey, spec) {
     spec.burnafterreading,
   ];
 
+  const algorithm = `${spec.algo}-${spec.ks}-${spec.mode}` as CipherGCMTypes;
+
   // AES 256 GCM Mode
-  const cipher = crypto.createCipheriv(`${spec.algo}-${spec.ks}-${spec.mode}`, key, iv, {
+  const cipher = createCipheriv(algorithm, key, iv, {
     authTagLength: Math.floor(spec.ts * 0.125),
   });
   cipher.setAAD(Buffer.from(JSON.stringify(adata), 'utf8'));
@@ -37,7 +41,7 @@ export function encrypt(message, masterkey, spec) {
   };
 }
 
-export function decrypt(data, masterkey, adata) {
+export function decrypt(data: string, masterkey: Buffer, adata: Array<any>): Paste {
   const bData = Buffer.from(data, 'base64');
   const spec = adata[0];
   const iv = Buffer.from(spec[0], 'base64');
@@ -52,7 +56,7 @@ export function decrypt(data, masterkey, adata) {
   const tag = bData.slice(ms, bData.length);
 
   // AES 256 GCM Mode
-  const decipher = crypto.createDecipheriv(`${spec[5]}-${spec[3]}-${spec[6]}`, key, iv);
+  const decipher = createDecipheriv(`${spec[5]}-${spec[3]}-${spec[6]}` as CipherGCMTypes, key, iv);
   decipher.setAuthTag(tag);
   decipher.setAAD(Buffer.from(JSON.stringify(adata), 'utf8'));
 

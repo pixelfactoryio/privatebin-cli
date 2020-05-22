@@ -1,10 +1,10 @@
 import tap from 'tap';
 import nock from 'nock';
 import {
-  host, response, pasteDataBuf, randomKey, opts, paste,
+  host, spec, response, pasteDataBuf, randomKey, opts, paste,
 } from './mock';
 
-import privatebin from '../lib/privatebin';
+import privatebin from '../src/lib/privatebin';
 
 tap.test('Should return a paste object', async (t) => {
   nock(host).post('/').reply(200, response);
@@ -14,5 +14,5 @@ tap.test('Should return a paste object', async (t) => {
 
 tap.test('Should reject', async (t) => {
   nock(host).post('/').reply(404, {});
-  t.rejects(privatebin(host, pasteDataBuf, randomKey, opts), {});
+  t.rejects(privatebin(host, pasteDataBuf, randomKey, opts));
 });
