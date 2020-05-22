@@ -10,7 +10,8 @@
     "lint": "eslint -c .eslintrc.js --ext .ts src",
     "lintfix": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "test": "tap -J --timeout=300 --test-ignore=mock.ts",
-    "posttest": "tap --coverage-report=text-lcov > coverage.out"
+    "posttest": "tap --coverage-report=text-lcov > coverage.out",
+    "build": "tsc"
   },
   "dependencies": {
     "axios": "^0.19.2",
