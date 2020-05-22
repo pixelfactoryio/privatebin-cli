@@ -4,7 +4,7 @@ import {
   pasteObj, pasteDataBuf, randomKey, spec,
 } from './mock';
 
-import { encrypt, decrypt } from '../lib/crypto';
+import { encrypt, decrypt } from '../src/lib/cryptotools';
 
 const { data, adata } = encrypt(pasteDataBuf, randomKey, spec);
 const decrypted = decrypt(data, randomKey, adata);
