@@ -51,7 +51,7 @@ function parseResponse(response: AxiosResponse, host: string, randomKey: Buffer)
   return {
     id: response.data.id,
     url: `${host}${response.data.url}#${encode(randomKey)}`,
-    deleteUrl: `${host}?pasteid=${response.data.id}&deletetoken=${response.data.deletetoken}`,
+    deleteUrl: `${host}/?pasteid=${response.data.id}&deletetoken=${response.data.deletetoken}`,
   };
 }
 
