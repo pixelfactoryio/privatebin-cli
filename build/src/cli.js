@@ -30,9 +30,9 @@ function addGlobalOptions(command) {
 function CLI(process, handler) {
     try {
         commander_1.default.name('privatebin-cli').version(package_json_1.version);
-        const encryptCmd = commander_1.default
-            .command('encrypt <message>')
-            .description('encrypt a repository into a newly created directory')
+        const sendCmd = commander_1.default
+            .command('send <message>')
+            .description('Post a message to privatebin')
             .option('-e, --expire <string>', 'Paste expire time [5min, 10min, 1hour, 1day, 1week, 1month, 1year, never]', validateExpire, '1week')
             .option('--burnafterreading', 'Burn after reading', false)
             .option('--opendiscussion', 'Open discussion', false)
@@ -50,16 +50,16 @@ function CLI(process, handler) {
                 output: options.output,
             });
         });
-        const decryptCmd = commander_1.default
-            .command('decrypt <message>')
-            .description('decrypt a repository into a newly created directory')
+        const getCmd = commander_1.default
+            .command('get <message>')
+            .description('Get a message from privatebin')
             .action(async (message, options) => {
             console.log(message);
             console.log(options.url);
             console.log(options.expire);
         });
-        addGlobalOptions(encryptCmd);
-        addGlobalOptions(decryptCmd);
+        addGlobalOptions(sendCmd);
+        addGlobalOptions(getCmd);
         if (process.stdin.isTTY) {
             commander_1.default.parse(process.argv);
         }
