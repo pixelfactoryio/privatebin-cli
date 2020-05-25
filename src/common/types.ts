@@ -1,10 +1,14 @@
+export type Paste = {
+  paste: string;
+};
+
 export type PrivatebinOptions = {
   burnafterreading: number;
   opendiscussion: number;
   expire: string;
 };
 
-export type Paste = {
+export type Privatebin = {
   id: string;
   url: string;
   deleteUrl: string;
@@ -22,8 +26,8 @@ export type Spec = {
 };
 
 export type PasteData = {
-  data: string;
-  adata: Array<any>;
+  ct: string; // Cipher Text
+  adata: Array<any>; // Additionnal data
 };
 
 export type HandlerOptions = {

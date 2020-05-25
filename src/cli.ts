@@ -1,9 +1,13 @@
 import program from 'commander';
 import chalk from 'chalk';
 import fs from 'fs';
+import commander from 'commander';
+import { decode } from 'bs58';
+
 import { version } from '../package.json';
 import { HandlerFunc } from './common/types';
-import commander from 'commander';
+import { getPaste } from './lib/privatebin';
+import { decrypt } from './lib/cryptotools';
 
 export function validateOutput(val: string): string {
   if (val.match(/^(text|json|yaml)$/i)) {
@@ -57,12 +61,17 @@ export function CLI(process: NodeJS.Process, handler: HandlerFunc): void {
       });
 
     const getCmd = program
-      .command('get <message>')
+      .command('get <pasteUrl>')
       .description('Get a message from privatebin')
-      .action(async (message, options) => {
-        console.log(message);
-        console.log(options.url);
-        console.log(options.expire);
+      .action(async (pasteUrl) => {
+        console.log(pasteUrl);
+        const pasteData = await getPaste(pasteUrl);
+
+        const adata = pasteData.data.adata;
+        const ct = pasteData.data.ct;
+        const randomKey = decode(pasteUrl.split('#')[1]);
+        const paste = decrypt(ct, Buffer.from(randomKey), adata);
+        console.log(paste);
       });
 
     addGlobalOptions(sendCmd);

@@ -32,10 +32,11 @@ function encrypt(message, masterkey, spec) {
         authTagLength: Math.floor(spec.ts * 0.125),
     });
     cipher.setAAD(Buffer.from(JSON.stringify(adata), 'utf8'));
-    return {
-        data: Buffer.concat([cipher.update(message), cipher.final(), cipher.getAuthTag()]).toString('base64'),
+    const pasteData = {
+        ct: Buffer.concat([cipher.update(message), cipher.final(), cipher.getAuthTag()]).toString('base64'),
         adata,
     };
+    return pasteData;
 }
 exports.encrypt = encrypt;
 function decrypt(data, masterkey, adata) {

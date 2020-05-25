@@ -7,7 +7,10 @@ exports.CLI = exports.validateExpire = exports.validateOutput = void 0;
 const commander_1 = __importDefault(require("commander"));
 const chalk_1 = __importDefault(require("chalk"));
 const fs_1 = __importDefault(require("fs"));
+const bs58_1 = require("bs58");
 const package_json_1 = require("../package.json");
+const privatebin_1 = require("./lib/privatebin");
+const cryptotools_1 = require("./lib/cryptotools");
 function validateOutput(val) {
     if (val.match(/^(text|json|yaml)$/i)) {
         return val;
@@ -51,12 +54,16 @@ function CLI(process, handler) {
             });
         });
         const getCmd = commander_1.default
-            .command('get <message>')
+            .command('get <pasteUrl>')
             .description('Get a message from privatebin')
-            .action(async (message, options) => {
-            console.log(message);
-            console.log(options.url);
-            console.log(options.expire);
+            .action(async (pasteUrl) => {
+            console.log(pasteUrl);
+            const pasteData = await privatebin_1.getPaste(pasteUrl);
+            const adata = pasteData.data.adata;
+            const ct = pasteData.data.ct;
+            const randomKey = bs58_1.decode(pasteUrl.split('#')[1]);
+            const paste = cryptotools_1.decrypt(ct, Buffer.from(randomKey), adata);
+            console.log(paste);
         });
         addGlobalOptions(sendCmd);
         addGlobalOptions(getCmd);

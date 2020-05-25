@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getBufferPaste = void 0;
+exports.getPaste = exports.getBufferPaste = void 0;
 const axios_1 = __importDefault(require("axios"));
 const bs58_1 = require("bs58");
 const cryptotools_1 = require("./cryptotools");
@@ -25,13 +25,23 @@ function getSpec(burnafterreading, opendiscussion) {
         opendiscussion,
     };
 }
+function getPaste(pasteUrl) {
+    const config = {
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Requested-With': 'JSONHttpRequest',
+        },
+    };
+    return axios_1.default.get(pasteUrl, config);
+}
+exports.getPaste = getPaste;
 function sendPaste(paste, host, expire) {
-    const { data, adata } = paste;
+    const { ct, adata } = paste;
     const postData = {
         v: 2,
+        ct,
         adata,
         meta: { expire },
-        ct: data,
     };
     const config = {
         headers: {
@@ -46,7 +56,7 @@ function parseResponse(response, host, randomKey) {
     return {
         id: response.data.id,
         url: `${host}${response.data.url}#${bs58_1.encode(randomKey)}`,
-        deleteUrl: `${host}?pasteid=${response.data.id}&deletetoken=${response.data.deletetoken}`,
+        deleteUrl: `${host}/?pasteid=${response.data.id}&deletetoken=${response.data.deletetoken}`,
     };
 }
 async function privatebin(host, pasteData, randomKey, options) {

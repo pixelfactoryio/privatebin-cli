@@ -35,10 +35,12 @@ export function encrypt(message: Buffer, masterkey: Buffer, spec: Spec): PasteDa
   });
   cipher.setAAD(Buffer.from(JSON.stringify(adata), 'utf8'));
 
-  return {
-    data: Buffer.concat([cipher.update(message), cipher.final(), cipher.getAuthTag()]).toString('base64'),
+  const pasteData = {
+    ct: Buffer.concat([cipher.update(message), cipher.final(), cipher.getAuthTag()]).toString('base64'),
     adata,
   };
+
+  return pasteData;
 }
 
 export function decrypt(data: string, masterkey: Buffer, adata: Array<any>): Paste {
