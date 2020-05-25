@@ -22,21 +22,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const commander_1 = __importDefault(require("commander"));
 const chalk_1 = __importDefault(require("chalk"));
 const js_yaml_1 = require("js-yaml");
 const crypto_1 = require("crypto");
 const privatebin_1 = __importStar(require("./lib/privatebin"));
 const cli_1 = require("./cli");
-cli_1.CLI(process, async (args, options) => {
-    const pasteData = privatebin_1.getBufferPaste(args[0]);
+cli_1.CLI(process, async (message, options) => {
+    const pasteData = privatebin_1.getBufferPaste(message);
     try {
         const paste = await privatebin_1.default(options.url, pasteData, crypto_1.randomBytes(32), {
             expire: options.expire,
             burnafterreading: options.burnafterreading ? 1 : 0,
             opendiscussion: options.opendiscussion ? 1 : 0,
         });
-        switch (commander_1.default.output) {
+        switch (options.output) {
             case 'json':
                 console.log(JSON.stringify(paste, null, 4));
                 break;

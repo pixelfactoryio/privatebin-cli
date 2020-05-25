@@ -9,7 +9,7 @@ const chalk_1 = __importDefault(require("chalk"));
 const fs_1 = __importDefault(require("fs"));
 const package_json_1 = require("../package.json");
 function validateOutput(val) {
-    if (val.match(/^(json|yaml)$/i)) {
+    if (val.match(/^(text|json|yaml)$/i)) {
         return val;
     }
     throw new Error(`invalid output: ${val}`);
@@ -22,25 +22,51 @@ function validateExpire(val) {
     throw new Error(`invalid expire: ${val}`);
 }
 exports.validateExpire = validateExpire;
+function addGlobalOptions(command) {
+    command
+        .option('-u, --url <string>', 'PrivateBin host', 'https://privatebin.net')
+        .option('-o, --output [type]', 'Output [text, json, yaml]', validateOutput, 'text');
+}
 function CLI(process, handler) {
     try {
-        commander_1.default
-            .name('privatebin-cli')
-            .version(package_json_1.version)
-            .usage('[options] <message>')
-            .option('-u, --url <string>', 'PrivateBin host', 'https://privatebin.net')
+        commander_1.default.name('privatebin-cli').version(package_json_1.version);
+        const encryptCmd = commander_1.default
+            .command('encrypt <message>')
+            .description('encrypt a repository into a newly created directory')
             .option('-e, --expire <string>', 'Paste expire time [5min, 10min, 1hour, 1day, 1week, 1month, 1year, never]', validateExpire, '1week')
-            .option('-o, --output [type]', 'Output [json, yaml]', validateOutput)
             .option('--burnafterreading', 'Burn after reading', false)
             .option('--opendiscussion', 'Open discussion', false)
-            .parse(process.argv);
+            .action(async (message, options) => {
+            if (options.burnafterreading && options.opendiscussion) {
+                // eslint-disable-next-line no-console
+                console.error(chalk_1.default `{red ERROR:} You can't use --opendiscussion with --burnafterreading flag`);
+                process.exit(1);
+            }
+            handler(message, {
+                expire: options.expire,
+                url: options.url,
+                burnafterreading: options.burnafterreading ? 1 : 0,
+                opendiscussion: options.opendiscussion ? 1 : 0,
+                output: options.output,
+            });
+        });
+        const decryptCmd = commander_1.default
+            .command('decrypt <message>')
+            .description('decrypt a repository into a newly created directory')
+            .action(async (message, options) => {
+            console.log(message);
+            console.log(options.url);
+            console.log(options.expire);
+        });
+        addGlobalOptions(encryptCmd);
+        addGlobalOptions(decryptCmd);
         if (process.stdin.isTTY) {
             commander_1.default.parse(process.argv);
         }
         else {
             const stdinBuffer = fs_1.default.readFileSync(0); // STDIN_FILENO = 0
+            process.argv.push(stdinBuffer.toString('utf8').trim());
             commander_1.default.parse(process.argv);
-            commander_1.default.args[0] = stdinBuffer.toString('utf8').trim();
         }
     }
     catch (e) {
@@ -49,18 +75,6 @@ function CLI(process, handler) {
         commander_1.default.outputHelp(() => commander_1.default.help());
         process.exit(1);
     }
-    if (commander_1.default.burnafterreading && commander_1.default.opendiscussion) {
-        // eslint-disable-next-line no-console
-        console.error(chalk_1.default `{red ERROR:} You can't use --opendisussion with --burnafterreading flag`);
-        commander_1.default.outputHelp(() => commander_1.default.help());
-        process.exit(1);
-    }
-    handler(commander_1.default.args, {
-        expire: commander_1.default.expire,
-        url: commander_1.default.url,
-        burnafterreading: commander_1.default.burnafterreading ? 1 : 0,
-        opendiscussion: commander_1.default.opendiscussion ? 1 : 0,
-    });
 }
 exports.CLI = CLI;
 //# sourceMappingURL=cli.js.map

@@ -1,4 +1,3 @@
-import program from 'commander';
 import chalk from 'chalk';
 import { dump } from 'js-yaml';
 import { randomBytes } from 'crypto';
@@ -6,8 +5,8 @@ import { randomBytes } from 'crypto';
 import privatebin, { getBufferPaste } from './lib/privatebin';
 import { CLI } from './cli';
 
-CLI(process, async (args, options) => {
-  const pasteData = getBufferPaste(args[0]);
+CLI(process, async (message, options) => {
+  const pasteData = getBufferPaste(message);
 
   try {
     const paste = await privatebin(options.url, pasteData, randomBytes(32), {
@@ -15,7 +14,7 @@ CLI(process, async (args, options) => {
       burnafterreading: options.burnafterreading ? 1 : 0,
       opendiscussion: options.opendiscussion ? 1 : 0,
     });
-    switch (program.output) {
+    switch (options.output) {
       case 'json':
         console.log(JSON.stringify(paste, null, 4));
         break;
