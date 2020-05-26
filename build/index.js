@@ -1,5 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const cmd_1 = require("./cmd");
-cmd_1.CLI(process);
+const cli_1 = require("./cli");
+cli_1.CLI(process);
 //# sourceMappingURL=index.js.map

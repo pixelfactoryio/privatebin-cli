@@ -42,4 +42,4 @@ export type Options = {
   compression: 'none' | 'zlib';
 };
 
-export type HandlerFunc = (message: string, options: Options) => void;
+export type HandlerFunc = (message: string, options: Options) => Promise<any>;

@@ -7,7 +7,7 @@ exports.CLI = void 0;
 const commander_1 = __importDefault(require("commander"));
 const chalk_1 = __importDefault(require("chalk"));
 const fs_1 = __importDefault(require("fs"));
-const package_json_1 = require("../package.json");
+const package_json_1 = require("../../package.json");
 const send_1 = require("./send");
 const get_1 = require("./get");
 function CLI(process) {
