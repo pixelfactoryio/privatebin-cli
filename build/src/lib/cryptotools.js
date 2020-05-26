@@ -56,8 +56,8 @@ function decrypt(data, masterkey, adata) {
     decipher.setAuthTag(tag);
     decipher.setAAD(Buffer.from(JSON.stringify(adata), 'utf8'));
     // decrypt the given encrypted
-    const decrypted = decipher.update(encrypted, 'binary', 'utf8') + decipher.final('utf8');
-    return JSON.parse(decrypted);
+    const decrypted = Buffer.concat([decipher.update(new Uint8Array(encrypted)), decipher.final()]);
+    return decrypted;
 }
 exports.decrypt = decrypt;
 //# sourceMappingURL=cryptotools.js.map

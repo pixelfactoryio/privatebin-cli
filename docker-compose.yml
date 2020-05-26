@@ -1,4 +1,4 @@
-version: "3.7"
+version: '3.7'
 
 volumes:
   data_privatebin:
@@ -24,8 +24,7 @@ services:
 
   privatebin:
     image: privatebin/nginx-fpm-alpine:1.3.4
-    volumes:
-      - data_privatebin:/srv/data
+    user: root
     labels:
       - traefik.enable=true
       - traefik.http.routers.privatebin.entrypoints=web

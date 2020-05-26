@@ -1,79 +1,67 @@
-import axios, { AxiosResponse } from 'axios';
-import { encode } from 'bs58';
+import pako from 'pako';
+import { AxiosResponse } from 'axios';
+import { decode } from 'bs58';
 
-import { encrypt } from './cryptotools';
-import { Privatebin, PrivatebinOptions } from '../common/types';
-import { Spec, PasteData } from '../common/types';
+import { Api } from './api';
+import { PasteData, Paste, Response, Options, Spec } from './types';
+import { decrypt, encrypt } from '../lib/cryptotools';
 
-export function getBufferPaste(data: string): Buffer {
-  return Buffer.from(
-    JSON.stringify({
-      paste: data,
-    }),
-    'utf8',
-  );
-}
+export class Privatebin extends Api {
+  getBufferPaste(data: string, compression?: string): Buffer | Uint8Array {
+    const buf = Buffer.from(JSON.stringify({ paste: data }), 'utf8');
+    if (compression === 'zlib') {
+      return pako.deflateRaw(new Uint8Array(buf));
+    } else {
+      return buf;
+    }
+  }
 
-function getSpec(burnafterreading: number, opendiscussion: number): Spec {
-  return {
-    algo: 'aes',
-    mode: 'gcm',
-    ks: 256,
-    ts: 128,
-    iter: 100000,
-    compression: 'none',
-    burnafterreading,
-    opendiscussion,
-  };
-}
+  getSpec(burnafterreading: number, opendiscussion: number, compression: string): Spec {
+    return {
+      algo: 'aes',
+      mode: 'gcm',
+      ks: 256,
+      ts: 128,
+      iter: 100000,
+      compression,
+      burnafterreading,
+      opendiscussion,
+    };
+  }
 
-export function getPaste(pasteUrl: string): Promise<AxiosResponse> {
-  const config = {
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'X-Requested-With': 'JSONHttpRequest',
-    },
-  };
+  public getPaste(id: string): Promise<PasteData> {
+    return this.get<PasteData, AxiosResponse<PasteData>>(`/?pasteid=${id}`).then(this.success);
+  }
 
-  return axios.get(pasteUrl, config);
-}
+  public postPaste(pasteData: PasteData, options: Options): Promise<Response> {
+    const { expire } = options;
+    const { ct, adata } = pasteData;
 
-function sendPaste(paste: PasteData, host: string, expire: string): Promise<AxiosResponse> {
-  const { ct, adata } = paste;
-  const postData = {
-    v: 2,
-    ct,
-    adata,
-    meta: { expire },
-  };
+    return this.post<Response, PasteData, AxiosResponse<Response>>('/', {
+      v: 2,
+      ct,
+      adata,
+      meta: { expire },
+    }).then(this.success);
+  }
 
-  const config = {
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Content-Length': Buffer.byteLength(JSON.stringify(postData)),
-      'X-Requested-With': 'JSONHttpRequest',
-    },
-  };
+  public async decryptPaste(id: string, randomKey: string): Promise<Paste> {
+    const response = await this.getPaste(id);
+    const paste = decrypt(response.ct, decode(randomKey), response.adata);
 
-  return axios.post(host, postData, config);
-}
+    if (response.adata[0][7] === 'zlib') {
+      return JSON.parse(pako.inflateRaw(paste, { to: 'string' }));
+    }
 
-function parseResponse(response: AxiosResponse, host: string, randomKey: Buffer): Privatebin {
-  return {
-    id: response.data.id,
-    url: `${host}${response.data.url}#${encode(randomKey)}`,
-    deleteUrl: `${host}/?pasteid=${response.data.id}&deletetoken=${response.data.deletetoken}`,
-  };
-}
+    return JSON.parse(paste.toString());
+  }
 
-export default async function privatebin(
-  host: string,
-  pasteData: Buffer,
-  randomKey: Buffer,
-  options: PrivatebinOptions,
-): Promise<Privatebin> {
-  const { burnafterreading, opendiscussion, expire } = options;
-  const spec = getSpec(burnafterreading, opendiscussion);
-  const response = await sendPaste(encrypt(pasteData, randomKey, spec), host, expire);
-  return parseResponse(response, host, randomKey);
+  public async encryptPaste(message: string, key: Buffer, options: Options): Promise<Response> {
+    const { burnafterreading, opendiscussion, compression } = options;
+    const spec = this.getSpec(burnafterreading, opendiscussion, compression);
+    const pasteData = this.getBufferPaste(message, compression);
+    const chiperPaste = encrypt(Buffer.from(pasteData), key, spec);
+
+    return this.postPaste(chiperPaste, options);
+  }
 }

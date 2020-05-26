@@ -2,12 +2,11 @@ import program from 'commander';
 import chalk from 'chalk';
 import fs from 'fs';
 import commander from 'commander';
-import { decode } from 'bs58';
+import { AxiosRequestConfig } from 'axios';
 
 import { version } from '../package.json';
-import { HandlerFunc } from './common/types';
-import { getPaste } from './lib/privatebin';
-import { decrypt } from './lib/cryptotools';
+import { HandlerFunc } from './lib/types';
+import { Privatebin } from './lib/privatebin';
 
 export function validateOutput(val: string): string {
   if (val.match(/^(text|json|yaml)$/i)) {
@@ -44,6 +43,7 @@ export function CLI(process: NodeJS.Process, handler: HandlerFunc): void {
       )
       .option('--burnafterreading', 'Burn after reading', false)
       .option('--opendiscussion', 'Open discussion', false)
+      .option('--compression <string>', 'Use compression [zlib, none]', 'zlib')
       .action(async (message, options) => {
         if (options.burnafterreading && options.opendiscussion) {
           // eslint-disable-next-line no-console
@@ -57,6 +57,7 @@ export function CLI(process: NodeJS.Process, handler: HandlerFunc): void {
           burnafterreading: options.burnafterreading ? 1 : 0,
           opendiscussion: options.opendiscussion ? 1 : 0,
           output: options.output,
+          compression: options.compression,
         });
       });
 
@@ -64,14 +65,22 @@ export function CLI(process: NodeJS.Process, handler: HandlerFunc): void {
       .command('get <pasteUrl>')
       .description('Get a message from privatebin')
       .action(async (pasteUrl) => {
-        console.log(pasteUrl);
-        const pasteData = await getPaste(pasteUrl);
+        const u = new URL(pasteUrl);
+        const id = u.search.substring(1);
+        const randomKey = u.hash.substring(1);
 
-        const adata = pasteData.data.adata;
-        const ct = pasteData.data.ct;
-        const randomKey = decode(pasteUrl.split('#')[1]);
-        const paste = decrypt(ct, Buffer.from(randomKey), adata);
-        console.log(paste);
+        const apiConfig: AxiosRequestConfig = {
+          baseURL: u.origin,
+          headers: {
+            common: {
+              'Content-Type': 'application/json',
+              'X-Requested-With': 'JSONHttpRequest',
+            },
+          },
+        };
+
+        const privatebin = new Privatebin(apiConfig);
+        console.log(await privatebin.decryptPaste(id, randomKey));
       });
 
     addGlobalOptions(sendCmd);

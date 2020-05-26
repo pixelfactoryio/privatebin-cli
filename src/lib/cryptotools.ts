@@ -1,6 +1,6 @@
 import { pbkdf2Sync, randomBytes, createCipheriv, createDecipheriv, CipherGCMTypes } from 'crypto';
 
-import { Spec, PasteData, Paste } from '../common/types';
+import { Spec, PasteData } from './types';
 
 export function deriveKey(masterkey: Buffer, salt: Buffer, iter: number): Buffer {
   // derive key: 32 byte key length
@@ -43,7 +43,7 @@ export function encrypt(message: Buffer, masterkey: Buffer, spec: Spec): PasteDa
   return pasteData;
 }
 
-export function decrypt(data: string, masterkey: Buffer, adata: Array<any>): Paste {
+export function decrypt(data: string, masterkey: Buffer, adata: Array<any>): Buffer {
   const bData = Buffer.from(data, 'base64');
   const spec = adata[0];
   const iv = Buffer.from(spec[0], 'base64');
@@ -63,7 +63,7 @@ export function decrypt(data: string, masterkey: Buffer, adata: Array<any>): Pas
   decipher.setAAD(Buffer.from(JSON.stringify(adata), 'utf8'));
 
   // decrypt the given encrypted
-  const decrypted = decipher.update(encrypted, 'binary', 'utf8') + decipher.final('utf8');
+  const decrypted = Buffer.concat([decipher.update(new Uint8Array(encrypted)), decipher.final()]);
 
-  return JSON.parse(decrypted);
+  return decrypted;
 }
