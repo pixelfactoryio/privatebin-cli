@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Privatebin = void 0;
 const pako_1 = __importDefault(require("pako"));
 const api_1 = require("./api");
-const cryptotools_1 = require("../lib/cryptotools");
+const cryptotools_1 = require("./cryptotools");
 class Privatebin extends api_1.Api {
     getBufferPaste(data, compression) {
         const buf = Buffer.from(JSON.stringify({ paste: data }), 'utf8');
@@ -59,4 +59,4 @@ class Privatebin extends api_1.Api {
     }
 }
 exports.Privatebin = Privatebin;
-//# sourceMappingURL=privatebin.js.map
+//# sourceMappingURL=index.js.map

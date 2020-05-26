@@ -1,46 +1,67 @@
-import Base58 from "bs58";
-import crypto from "crypto";
-import { Spec, HandlerOptions, Paste } from "../src/common/types";
+import { AxiosRequestConfig } from 'axios';
 
-export const host = "https://privatebin.dev.local";
+import { Spec, Options, Paste, Response, Output, PasteData } from '../src/lib/types';
 
-export const response = {
-  status: 0,
-  id: "c90e56c1f4ce9500",
-  url: "/?c90e56c1f4ce9500",
-  deletetoken:
-    "389e551bc2bbe83d88e72987bcdd434e38298d40a8cd67d57748684749b8156d",
+export const host = 'https://privatebin.dev.local';
+
+export const config: AxiosRequestConfig = {
+  baseURL: host,
+  headers: {
+    common: {
+      'Content-Type': 'application/json',
+      'X-Requested-With': 'JSONHttpRequest',
+    },
+  },
 };
 
-export const msg = "Hello World !";
+export const msg = 'Hello World';
 
 export const pasteObj = {
   paste: msg,
-};
+} as Paste;
 
-export const pasteDataBuf = Buffer.from(JSON.stringify(pasteObj), "utf8");
+export const postPasteResponse = {
+  status: 0,
+  id: 'cdef294c33ea8003',
+  url: '/?cdef294c33ea8003',
+  deletetoken: '1df10aabc1b4b8b139adef796827c2994c2c7dad95e300c741dcef238f698ff6',
+} as Response;
+
+export const getPasteResponse = {
+  status: 0,
+  id: 'cdef294c33ea8003',
+  url: '/?cdef294c33ea8003',
+  adata: [['knT4DMZrlyYKv5VPSdYRlg==', '6cVoVXe1R/4=', 100000, 256, 128, 'aes', 'gcm', 'zlib'], 'plaintext', 0, 0],
+  v: 2,
+  ct: 'PWq5P7FeVqBsIRjt8yEX5DpQfnVc63Jboxknh/NLE2sVmftyK99D6pQ=',
+} as PasteData;
+
+export const pasteDataBuf = Buffer.from(JSON.stringify(pasteObj), 'utf8');
 
 export const opts = {
-  expire: "5min",
+  url: 'https://privatebin.dev.local',
+  expire: '5min',
   burnafterreading: 0,
   opendiscussion: 0,
-} as HandlerOptions;
+  output: 'text',
+  compression: 'zlib',
+} as Options;
 
 export const spec = {
-  algo: "aes",
-  mode: "gcm",
+  algo: 'aes',
+  mode: 'gcm',
   ks: 256,
   ts: 128,
   iter: 100000,
-  compression: "none",
+  compression: 'zlib',
   burnafterreading: 0,
   opendiscussion: 0,
 } as Spec;
 
-export const randomKey = crypto.randomBytes(32);
+export const key = '5DMz3GsHsNmaQhSaH9ej8nvvpCdxTxpvMtLP7XQLjxns';
 
-export const paste = {
-  id: response.id,
-  url: `${host}${response.url}#${Base58.encode(randomKey)}`,
-  deleteUrl: `${host}?pasteid=${response.id}&deletetoken=${response.deletetoken}`,
-} as Paste;
+export const output = {
+  pasteId: postPasteResponse.id,
+  pasteURL: `${host}${postPasteResponse.url}#${key}`,
+  deleteURL: `${host}/?pasteid=${postPasteResponse.id}&deletetoken=${postPasteResponse.deletetoken}`,
+} as Output;

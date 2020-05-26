@@ -87,3 +87,6 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
+
+# js map files
+*.js.map
