@@ -7,7 +7,7 @@ const chalk_1 = __importDefault(require("chalk"));
 const yaml_1 = __importDefault(require("yaml"));
 const crypto_1 = require("crypto");
 const bs58_1 = require("bs58");
-const privatebin_1 = require("./lib/privatebin");
+const lib_1 = require("./lib");
 const cli_1 = require("./cli");
 function formatResponse(response, host, randomKey) {
     return {
@@ -27,7 +27,7 @@ cli_1.CLI(process, async (message, options) => {
                 },
             },
         };
-        const privatebin = new privatebin_1.Privatebin(apiConfig);
+        const privatebin = new lib_1.Privatebin(apiConfig);
         const key = crypto_1.randomBytes(32);
         const paste = formatResponse(await privatebin.encryptPaste(message, key, options), options.url, key);
         switch (options.output) {

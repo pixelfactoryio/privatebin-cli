@@ -2,11 +2,12 @@ import program from 'commander';
 import chalk from 'chalk';
 import fs from 'fs';
 import commander from 'commander';
+import { decode } from 'bs58';
 import { AxiosRequestConfig } from 'axios';
 
 import { version } from '../package.json';
 import { HandlerFunc } from './lib/types';
-import { Privatebin } from './lib/privatebin';
+import { Privatebin } from './lib';
 
 export function validateOutput(val: string): string {
   if (val.match(/^(text|json|yaml)$/i)) {
@@ -67,7 +68,7 @@ export function CLI(process: NodeJS.Process, handler: HandlerFunc): void {
       .action(async (pasteUrl) => {
         const u = new URL(pasteUrl);
         const id = u.search.substring(1);
-        const randomKey = u.hash.substring(1);
+        const key = u.hash.substring(1);
 
         const apiConfig: AxiosRequestConfig = {
           baseURL: u.origin,
@@ -80,7 +81,7 @@ export function CLI(process: NodeJS.Process, handler: HandlerFunc): void {
         };
 
         const privatebin = new Privatebin(apiConfig);
-        console.log(await privatebin.decryptPaste(id, randomKey));
+        console.log(await privatebin.decryptPaste(id, decode(key)));
       });
 
     addGlobalOptions(sendCmd);

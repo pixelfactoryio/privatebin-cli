@@ -4,7 +4,7 @@ import { randomBytes } from 'crypto';
 import { AxiosRequestConfig } from 'axios';
 import { encode } from 'bs58';
 
-import { Privatebin } from './lib/privatebin';
+import { Privatebin } from './lib';
 import { CLI } from './cli';
 import { Response, Output } from './lib/types';
 

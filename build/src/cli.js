@@ -7,8 +7,9 @@ exports.CLI = exports.validateExpire = exports.validateOutput = void 0;
 const commander_1 = __importDefault(require("commander"));
 const chalk_1 = __importDefault(require("chalk"));
 const fs_1 = __importDefault(require("fs"));
+const bs58_1 = require("bs58");
 const package_json_1 = require("../package.json");
-const privatebin_1 = require("./lib/privatebin");
+const lib_1 = require("./lib");
 function validateOutput(val) {
     if (val.match(/^(text|json|yaml)$/i)) {
         return val;
@@ -59,7 +60,7 @@ function CLI(process, handler) {
             .action(async (pasteUrl) => {
             const u = new URL(pasteUrl);
             const id = u.search.substring(1);
-            const randomKey = u.hash.substring(1);
+            const key = u.hash.substring(1);
             const apiConfig = {
                 baseURL: u.origin,
                 headers: {
@@ -69,8 +70,8 @@ function CLI(process, handler) {
                     },
                 },
             };
-            const privatebin = new privatebin_1.Privatebin(apiConfig);
-            console.log(await privatebin.decryptPaste(id, randomKey));
+            const privatebin = new lib_1.Privatebin(apiConfig);
+            console.log(await privatebin.decryptPaste(id, bs58_1.decode(key)));
         });
         addGlobalOptions(sendCmd);
         addGlobalOptions(getCmd);

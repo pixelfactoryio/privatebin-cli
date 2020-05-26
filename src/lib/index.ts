@@ -1,10 +1,9 @@
 import pako from 'pako';
 import { AxiosResponse } from 'axios';
-import { decode } from 'bs58';
 
 import { Api } from './api';
 import { PasteData, Paste, Response, Options, Spec } from './types';
-import { decrypt, encrypt } from '../lib/cryptotools';
+import { decrypt, encrypt } from './cryptotools';
 
 export class Privatebin extends Api {
   getBufferPaste(data: string, compression?: string): Buffer | Uint8Array {
@@ -45,9 +44,9 @@ export class Privatebin extends Api {
     }).then(this.success);
   }
 
-  public async decryptPaste(id: string, randomKey: string): Promise<Paste> {
+  public async decryptPaste(id: string, key: Buffer): Promise<Paste> {
     const response = await this.getPaste(id);
-    const paste = decrypt(response.ct, decode(randomKey), response.adata);
+    const paste = decrypt(response.ct, key, response.adata);
 
     if (response.adata[0][7] === 'zlib') {
       return JSON.parse(pako.inflateRaw(paste, { to: 'string' }));
