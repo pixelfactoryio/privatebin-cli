@@ -13,7 +13,7 @@ const get_1 = require("./get");
 function CLI(process) {
     try {
         const program = new commander_1.default.Command();
-        program.name('privatebin-cli').version(package_json_1.version);
+        program.name('privatebin').version(package_json_1.version);
         program.addCommand(send_1.New());
         program.addCommand(get_1.New());
         if (process.stdin.isTTY) {

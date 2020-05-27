@@ -10,7 +10,7 @@ export function CLI(process: NodeJS.Process): void {
   try {
     const program = new commander.Command();
 
-    program.name('privatebin-cli').version(version);
+    program.name('privatebin').version(version);
     program.addCommand(NewSendCmd());
     program.addCommand(NewGetCmd());
 
