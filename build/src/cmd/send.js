@@ -18,23 +18,17 @@ function formatResponse(response, host, randomKey) {
     };
 }
 async function sendCmdAction(message, key, options) {
-    try {
-        const apiConfig = {
-            baseURL: options.url,
-            headers: {
-                common: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'JSONHttpRequest',
-                },
+    const apiConfig = {
+        baseURL: options.url,
+        headers: {
+            common: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'JSONHttpRequest',
             },
-        };
-        const privatebin = new lib_1.Privatebin(apiConfig);
-        return await privatebin.encryptPaste(message, key, options);
-    }
-    catch (error) {
-        console.error(chalk_1.default `{red ERROR:} ${error.message}`);
-        return error;
-    }
+        },
+    };
+    const privatebin = new lib_1.Privatebin(apiConfig);
+    return await privatebin.encryptPaste(message, key, options);
 }
 function validateExpire(val) {
     if (val.match(/^(5min|10min|1hour|1day|1week|1month|1year|never)$/i)) {
@@ -60,9 +54,7 @@ function New() {
         .option('-o, --output [type]', 'output format [text, json, yaml]', validateOutput, 'text')
         .action(async (message, options) => {
         if (options.burnafterreading && options.opendiscussion) {
-            // eslint-disable-next-line no-console
-            console.error(chalk_1.default `{red ERROR:} You can't use --opendiscussion with --burnafterreading flag`);
-            process.exit(1);
+            throw new Error("You can't use --opendiscussion with --burnafterreading flag");
         }
         const key = crypto_1.randomBytes(32);
         const response = await sendCmdAction(message, key, {
@@ -76,15 +68,15 @@ function New() {
         const paste = formatResponse(response, options.url, key);
         switch (options.output) {
             case 'json':
-                console.log(JSON.stringify(paste, null, 4));
+                process.stdout.write(`${JSON.stringify(paste, null, 2)}\n`);
                 break;
             case 'yaml':
-                console.log(yaml_1.default.stringify(paste));
+                process.stdout.write(`${yaml_1.default.stringify(paste)}\n`);
                 break;
             default:
-                console.log(chalk_1.default `{bold pasteId:} ${paste.pasteId}`);
-                console.log(chalk_1.default `{bold pasteURL:} {greenBright ${paste.pasteURL}}`);
-                console.log(chalk_1.default `{bold deleteURL:} {gray ${paste.deleteURL}}`);
+                process.stdout.write(chalk_1.default `{bold pasteId:} ${paste.pasteId}\n`);
+                process.stdout.write(chalk_1.default `{bold pasteURL:} {greenBright ${paste.pasteURL}}\n`);
+                process.stdout.write(chalk_1.default `{bold deleteURL:} {gray ${paste.deleteURL}}\n`);
         }
     });
     return cmd;
