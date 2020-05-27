@@ -21,10 +21,10 @@ jobs:
           npm run build
       - name: Register Token
         run: |
-          echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" > ~/.npmrc
-          echo "_auth=$NPM_AUTH_TOKEN" >>  ~/.npmrc
-          echo "email=<amine@pixelfactory.io>" >>  ~/.npmrc
-          echo "always-auth=true" >>  ~/.npmrc
+          echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" > $NPM_CONFIG_USERCONFIG
+          echo "_auth=$NPM_AUTH_TOKEN" >> $NPM_CONFIG_USERCONFIG
+          echo "email=<amine@pixelfactory.io>" >> $NPM_CONFIG_USERCONFIG
+          echo "always-auth=true" >> $NPM_CONFIG_USERCONFIG
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
       - name: Publish
