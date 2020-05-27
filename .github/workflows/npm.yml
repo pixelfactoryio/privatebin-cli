@@ -26,6 +26,6 @@ jobs:
           echo "email=<amine@pixelfactory.io>" >>  ~/.npmrc
           echo "always-auth=true" >>  ~/.npmrc
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}  
-        - name: Publish
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      - name: Publish
         run: npm publish --access public
