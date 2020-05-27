@@ -27,13 +27,22 @@ export const postPasteResponse = {
   deletetoken: '1df10aabc1b4b8b139adef796827c2994c2c7dad95e300c741dcef238f698ff6',
 } as Response;
 
-export const getPasteResponse = {
+export const getPasteResponseZlib = {
   status: 0,
   id: 'cdef294c33ea8003',
   url: '/?cdef294c33ea8003',
   adata: [['knT4DMZrlyYKv5VPSdYRlg==', '6cVoVXe1R/4=', 100000, 256, 128, 'aes', 'gcm', 'zlib'], 'plaintext', 0, 0],
   v: 2,
   ct: 'PWq5P7FeVqBsIRjt8yEX5DpQfnVc63Jboxknh/NLE2sVmftyK99D6pQ=',
+} as PasteData;
+
+export const getPasteResponse = {
+  status: 0,
+  id: 'cdef294c33ea8003',
+  url: '/?cdef294c33ea8003',
+  adata: [['lZl+nQfkQUJbTrrrgcFT9A==', 'WX1e1AU7+EI=', 100000, 256, 128, 'aes', 'gcm', 'none'], 'plaintext', 0, 0],
+  v: 2,
+  ct: 'z4xybqQb8N8UIZo07QVaOobDh379gaZhT9RuazqYNuQLNxQLKYwU',
 } as PasteData;
 
 export const pasteDataBuf = Buffer.from(JSON.stringify(pasteObj), 'utf8');
