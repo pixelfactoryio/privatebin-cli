@@ -1,11 +1,10 @@
 import commander from 'commander';
 import fs from 'fs';
 
-import { version } from '../../package.json';
 import { New as NewSendCmd } from './send';
 import { New as NewGetCmd } from './get';
 
-export function CLI(process: NodeJS.Process): Promise<commander.Command> {
+export function CLI(process: NodeJS.Process, version: string): Promise<commander.Command> {
   const program = new commander.Command();
 
   program.name('privatebin').version(version);

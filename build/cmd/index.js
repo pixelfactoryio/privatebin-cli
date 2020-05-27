@@ -6,12 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CLI = void 0;
 const commander_1 = __importDefault(require("commander"));
 const fs_1 = __importDefault(require("fs"));
-const package_json_1 = require("../../package.json");
 const send_1 = require("./send");
 const get_1 = require("./get");
-function CLI(process) {
+function CLI(process, version) {
     const program = new commander_1.default.Command();
-    program.name('privatebin').version(package_json_1.version);
+    program.name('privatebin').version(version);
     program.addCommand(send_1.New());
     program.addCommand(get_1.New());
     if (process.stdin.isTTY) {

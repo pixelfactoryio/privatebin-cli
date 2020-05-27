@@ -1,5 +1,5 @@
 {
-  "name": "privatebin-cli",
+  "name": "@pixelfactory/privatebin-cli",
   "version": "1.0.0",
   "homepage": "https://github.com/pixelfactoryio/privatebin-cli",
   "description": "a PrivateBin client written in typescript",
@@ -22,9 +22,9 @@
     "url": "https://github.com/pixelfactoryio/privatebin-cli/issues"
   },
   "bin": {
-    "privatebin": "build/src/bin/privatebin.js"
+    "privatebin": "build/bin/privatebin.js"
   },
-  "main": "build/src/lib/index.js",
+  "main": "build/lib/index.js",
   "license": "MIT",
   "scripts": {
     "lint": "eslint -c .eslintrc.js --ext .ts src",
@@ -42,6 +42,7 @@
     "commander": "^5.1.0",
     "esm": "^3.2.25",
     "pako": "^1.0.11",
+    "pjson": "^1.0.9",
     "yaml": "^1.10.0"
   },
   "devDependencies": {
