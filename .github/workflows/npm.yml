@@ -19,7 +19,13 @@ jobs:
         run: |
           npm install
           npm run build
-      - name: Publish
-        run: npm publish --access public
+      - name: Register Token
+        run: |
+          echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" > ~/.npmrc
+          echo "_auth=$NPM_AUTH_TOKEN" >>  ~/.npmrc
+          echo "email=<amine@pixelfactory.io>" >>  ~/.npmrc
+          echo "always-auth=true" >>  ~/.npmrc
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.npm_token }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}  
+        - name: Publish
+        run: npm publish --access public
