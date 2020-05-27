@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.New = exports.getCmdAction = void 0;
 const commander_1 = __importDefault(require("commander"));
 const bs58_1 = require("bs58");
-const lib_1 = require("./lib");
+const lib_1 = require("../lib");
 async function getCmdAction(pasteUrl) {
     const u = new URL(pasteUrl);
     const id = u.search.substring(1);
@@ -25,12 +25,10 @@ async function getCmdAction(pasteUrl) {
 }
 exports.getCmdAction = getCmdAction;
 function New() {
-    const cmd = commander_1.default.command('get');
-    cmd
-        .command('get <pasteUrl>')
-        .description('Get a message from privatebin')
-        .action(async (pasteUrl) => {
-        await getCmdAction(pasteUrl);
+    const cmd = commander_1.default.command('get <pasteUrl>');
+    cmd.description('get a message from privatebin').action(async (pasteUrl) => {
+        const paste = await getCmdAction(pasteUrl);
+        process.stderr.write(`${paste.paste}\n`);
     });
     return cmd;
 }

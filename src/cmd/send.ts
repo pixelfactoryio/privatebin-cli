@@ -17,23 +17,18 @@ function formatResponse(response: Response, host: string, randomKey: Buffer): Ou
 }
 
 async function sendCmdAction(message: string, key: Buffer, options: Options): Promise<Response> {
-  try {
-    const apiConfig: AxiosRequestConfig = {
-      baseURL: options.url,
-      headers: {
-        common: {
-          'Content-Type': 'application/json',
-          'X-Requested-With': 'JSONHttpRequest',
-        },
+  const apiConfig: AxiosRequestConfig = {
+    baseURL: options.url,
+    headers: {
+      common: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'JSONHttpRequest',
       },
-    };
+    },
+  };
 
-    const privatebin = new Privatebin(apiConfig);
-    return await privatebin.encryptPaste(message, key, options);
-  } catch (error) {
-    console.error(chalk`{red ERROR:} ${error.message}`);
-    return error;
-  }
+  const privatebin = new Privatebin(apiConfig);
+  return await privatebin.encryptPaste(message, key, options);
 }
 
 function validateExpire(val: string): string {
@@ -68,9 +63,7 @@ export function New(): commander.Command {
     .option('-o, --output [type]', 'output format [text, json, yaml]', validateOutput, 'text')
     .action(async (message, options) => {
       if (options.burnafterreading && options.opendiscussion) {
-        // eslint-disable-next-line no-console
-        console.error(chalk`{red ERROR:} You can't use --opendiscussion with --burnafterreading flag`);
-        process.exit(1);
+        throw new Error("You can't use --opendiscussion with --burnafterreading flag");
       }
 
       const key = randomBytes(32);
@@ -88,15 +81,15 @@ export function New(): commander.Command {
 
       switch (options.output) {
         case 'json':
-          console.log(JSON.stringify(paste, null, 4));
+          process.stdout.write(`${JSON.stringify(paste, null, 2)}\n`);
           break;
         case 'yaml':
-          console.log(YAML.stringify(paste));
+          process.stdout.write(`${YAML.stringify(paste)}\n`);
           break;
         default:
-          console.log(chalk`{bold pasteId:} ${paste.pasteId}`);
-          console.log(chalk`{bold pasteURL:} {greenBright ${paste.pasteURL}}`);
-          console.log(chalk`{bold deleteURL:} {gray ${paste.deleteURL}}`);
+          process.stdout.write(chalk`{bold pasteId:} ${paste.pasteId}\n`);
+          process.stdout.write(chalk`{bold pasteURL:} {greenBright ${paste.pasteURL}}\n`);
+          process.stdout.write(chalk`{bold deleteURL:} {gray ${paste.deleteURL}}\n`);
       }
     });
 
