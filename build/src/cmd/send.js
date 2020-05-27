@@ -51,13 +51,13 @@ function validateOutput(val) {
 function New() {
     const cmd = commander_1.default.command('send <message>');
     cmd
-        .description('Post a message to privatebin')
-        .option('-e, --expire <string>', 'Paste expire time [5min, 10min, 1hour, 1day, 1week, 1month, 1year, never]', validateExpire, '1week')
-        .option('--burnafterreading', 'Burn after reading', false)
-        .option('--opendiscussion', 'Open discussion', false)
-        .option('--compression <string>', 'Use compression [zlib, none]', 'zlib')
-        .option('-u, --url <string>', 'PrivateBin host', 'https://privatebin.net')
-        .option('-o, --output [type]', 'Output [text, json, yaml]', validateOutput, 'text')
+        .description('post a message to privatebin')
+        .option('-e, --expire <string>', 'paste expire time [5min, 10min, 1hour, 1day, 1week, 1month, 1year, never]', validateExpire, '1week')
+        .option('--burnafterreading', 'burn after reading', false)
+        .option('--opendiscussion', 'open discussion', false)
+        .option('--compression <string>', 'use compression [zlib, none]', 'zlib')
+        .option('-u, --url <string>', 'privateBin host', 'https://privatebin.net')
+        .option('-o, --output [type]', 'output format [text, json, yaml]', validateOutput, 'text')
         .action(async (message, options) => {
         if (options.burnafterreading && options.opendiscussion) {
             // eslint-disable-next-line no-console

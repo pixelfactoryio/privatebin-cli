@@ -1,4 +1,5 @@
 # privatebin-cli
+
 ![CI](https://github.com/amine7536/privatebin-cli/workflows/CI/badge.svg)
 [![codecov](https://codecov.io/gh/amine7536/privatebin-cli/branch/master/graph/badge.svg)](https://codecov.io/gh/amine7536/privatebin-cli)
 
@@ -10,38 +11,59 @@ npm install -g https://github.com/amine7536/privatebin-cli
 
 ## Usage
 
+### Send command
+
 ```bash
-$ privatebin --help
-Usage: privatebin [options] <message>
+$ privatebin send --help
+Usage: privatebin-cli send [options] <message>
+
+post a message to privatebin
 
 Options:
-  -V, --version          output the version number
-  -u, --url <string>     PrivateBin host (default: "https://privatebin.net")
-  -e, --expire <string>  Paste expire time [5min, 10min, 1hour, 1day, 1week, 1month, 1year, never] (default: "1week")
-  -o, --output [type]    Output [json, yaml]
-  --burnafterreading     Burn after reading
-  --opendiscussion       Open discussion
-  -h, --help             output usage information
+  -e, --expire <string>   paste expire time [5min, 10min, 1hour, 1day, 1week, 1month, 1year, never] (default: "1week")
+  --burnafterreading      burn after reading (default: false)
+  --opendiscussion        open discussion (default: false)
+  --compression <string>  use compression [zlib, none] (default: "zlib")
+  -u, --url <string>      privateBin host (default: "https://privatebin.net")
+  -o, --output [type]     output format [text, json, yaml] (default: "text")
+  -h, --help              display help for command
 ```
 
-## Example
+#### Example
 
 ```bash
-$ privatebin --url https://privatebin.net --expire 5min --output json 'Hello World !'
+$ privatebin send -e 5min -o json "Hello World"
 {
-    "id": "090c6a3af1f1aac0",
-    "url": "https://privatebin.net/?090c6a3af1f1aac0#FKic58C2S52w28R1HCPwGyNUSRC3zHPpBcNy6MWrbfBo",
-    "deleteUrl": "https://privatebin.net?pasteid=090c6a3af1f1aac0&deletetoken=5059c33f9077c27eab2658b4d8daf581f7820285a2bf1f53f98161f24efc5c48"
+    "pasteId": "ccd05227e7bab99c",
+    "pasteURL": "https://privatebin.net/?ccd05227e7bab99c#GWk29DqQx6NAfMYHgMeDeR76QSyL82fHHg5yGu3U8fft",
+    "deleteURL": "https://privatebin.net/?pasteid=ccd05227e7bab99c&deletetoken=62a14a8483452485902b2e86e56f07269dd484f305d7d210d2375397deb79c1b"
 }
 ```
 
-Or
+Or use pipe
 
 ```bash
-$ echo 'Hello World !' | privatebin --url https://privatebin.net --expire 5min --output yaml
-id: fb9365022bbd33b1
-url: >-
-  https://privatebin.net/?fb9365022bbd33b1#9wRmzD3RGgu8DrgKt2dzncokwN1n76ytC4ycRfVQgxv4
-deleteUrl: >-
-  https://privatebin.net?pasteid=fb9365022bbd33b1&deletetoken=9de1b24106e6fb3ce6d950471937caa2f64cd08ff69664f06252b1292a5b6f50
+$ echo 'Hello World' | privatebin send -e 5min
+pasteId: 649aa8c062d4ed4d
+pasteURL: https://privatebin.net/?649aa8c062d4ed4d#Gt3NoxrGF8Tck5j9bBrsuFjbEaCyEBfBiGi1g8qCF2kv
+deleteURL: https://privatebin.net/?pasteid=649aa8c062d4ed4d&deletetoken=b2dae42a762cf0b5e1dbf1fd5113356ba370218091668950c7f6a2d181a07ac6
+```
+
+### Get command
+
+```bash
+$ privatebin get --help
+Usage: privatebin-cli get [options] <pasteUrl>
+
+get a message from privatebin
+
+Options:
+  -h, --help  display help for command
+```
+
+#### Example
+
+```bash
+$ privatebin get "https://privatebin.net/?ccd05227e7bab99c#GWk29DqQx6NAfMYHgMeDeR76QSyL82fHHg5yGu3U8fft"
+Hello World
 ```
