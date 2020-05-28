@@ -1,7 +1,7 @@
 # privatebin-cli
 
-![CI](https://github.com/amine7536/privatebin-cli/workflows/CI/badge.svg)
-[![codecov](https://codecov.io/gh/amine7536/privatebin-cli/branch/master/graph/badge.svg)](https://codecov.io/gh/amine7536/privatebin-cli)
+![CI](https://github.com/pixelfactoryio/privatebin-cli/workflows/CI/badge.svg)
+[![codecov](https://codecov.io/gh/pixelfactoryio/privatebin-cli/branch/master/graph/badge.svg)](https://codecov.io/gh/pixelfactoryio/privatebin-cli)
 
 ## Install
 
