@@ -6,7 +6,7 @@
 ## Install
 
 ```bash
-npm install -g https://github.com/amine7536/privatebin-cli
+npm install -g @pixelfactory/privatebin
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ npm install -g https://github.com/amine7536/privatebin-cli
 
 ```bash
 $ privatebin send --help
-Usage: privatebin-cli send [options] <message>
+Usage: privatebin send [options] <message>
 
 post a message to privatebin
 
@@ -34,9 +34,9 @@ Options:
 ```bash
 $ privatebin send -e 5min -o json "Hello World"
 {
-    "pasteId": "ccd05227e7bab99c",
-    "pasteURL": "https://privatebin.net/?ccd05227e7bab99c#GWk29DqQx6NAfMYHgMeDeR76QSyL82fHHg5yGu3U8fft",
-    "deleteURL": "https://privatebin.net/?pasteid=ccd05227e7bab99c&deletetoken=62a14a8483452485902b2e86e56f07269dd484f305d7d210d2375397deb79c1b"
+  "pasteId": "ccd05227e7bab99c",
+  "pasteURL": "https://privatebin.net/?ccd05227e7bab99c#GWk29DqQx6NAfMYHgMeDeR76QSyL82fHHg5yGu3U8fft",
+  "deleteURL": "https://privatebin.net/?pasteid=ccd05227e7bab99c&deletetoken=62a14a8483452485902b2e86e56f07269dd484f305d7d210d2375397deb79c1b"
 }
 ```
 
@@ -53,7 +53,7 @@ deleteURL: https://privatebin.net/?pasteid=649aa8c062d4ed4d&deletetoken=b2dae42a
 
 ```bash
 $ privatebin get --help
-Usage: privatebin-cli get [options] <pasteUrl>
+Usage: privatebin get [options] <pasteUrl>
 
 get a message from privatebin
 
