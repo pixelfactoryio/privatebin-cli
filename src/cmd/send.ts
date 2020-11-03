@@ -15,9 +15,9 @@ function formatResponse(response: Response, host: string, randomKey: Buffer): Ou
   };
 }
 
-async function sendCmdAction(message: string, key: Buffer, options: Options): Promise<Response> {
+async function sendCmdAction(text: string, key: Buffer, options: Options): Promise<Response> {
   const privatebin = new PrivatebinClient(options.url);
-  return await privatebin.sendText(message, key, options);
+  return await privatebin.sendText(text, key, options);
 }
 
 function validateExpire(val: string): string {
@@ -34,11 +34,11 @@ function validateOutput(val: string): string {
   throw new Error(`invalid output: ${val}`);
 }
 
-export function New(): commander.Command {
-  const cmd = commander.command('send <message>');
+export function NewSendCmd(): commander.Command {
+  const cmd = commander.command('send <text>');
 
   cmd
-    .description('post a message to privatebin')
+    .description('Send a text to privatebin')
     .option(
       '-e, --expire <string>',
       'paste expire time [5min, 10min, 1hour, 1day, 1week, 1month, 1year, never]',
@@ -50,14 +50,14 @@ export function New(): commander.Command {
     .option('--compression <string>', 'use compression [zlib, none]', 'zlib')
     .option('-u, --url <string>', 'privateBin host', 'https://privatebin.net')
     .option('-o, --output [type]', 'output format [text, json, yaml]', validateOutput, 'text')
-    .action(async (message, options) => {
+    .action(async (text, options) => {
       if (options.burnafterreading && options.opendiscussion) {
         throw new Error("You can't use --opendiscussion with --burnafterreading flag");
       }
 
       const key = randomBytes(32);
 
-      const response = await sendCmdAction(message, key, {
+      const response = await sendCmdAction(text, key, {
         expire: options.expire,
         url: options.url,
         burnafterreading: options.burnafterreading ? 1 : 0,

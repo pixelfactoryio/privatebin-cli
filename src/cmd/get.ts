@@ -13,11 +13,11 @@ export async function getCmdAction(pasteUrl: string): Promise<Paste> {
   return await privatebin.getText(id, decode(key));
 }
 
-export function New(): commander.Command {
-  const cmd = commander.command('get <pasteUrl>');
+export function NewGetCmd(): commander.Command {
+  const cmd = commander.command('get <url>');
 
-  cmd.description('get a message from privatebin').action(async (pasteUrl) => {
-    const paste = await getCmdAction(pasteUrl);
+  cmd.description('Get a text from privatebin').action(async (url) => {
+    const paste = await getCmdAction(url);
     process.stderr.write(`${paste.paste}\n`);
   });
   return cmd;

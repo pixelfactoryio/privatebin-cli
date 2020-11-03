@@ -1,10 +1,12 @@
 import commander from 'commander';
+import chalk from 'chalk';
+import pjson from 'pjson';
 import fs from 'fs';
 
-import { New as NewSendCmd } from './send';
-import { New as NewGetCmd } from './get';
+import { NewSendCmd } from './send';
+import { NewGetCmd } from './get';
 
-export function CLI(process: NodeJS.Process, version: string): Promise<commander.Command> {
+function CLI(process: NodeJS.Process, version: string): Promise<commander.Command> {
   const program = new commander.Command();
 
   program.name('privatebin').version(version);
@@ -19,3 +21,8 @@ export function CLI(process: NodeJS.Process, version: string): Promise<commander
     return program.parseAsync(process.argv);
   }
 }
+
+CLI(process, pjson.version).catch((error) => {
+  process.stderr.write(chalk`{red ERROR:} ${error.message}\n`);
+  process.exit(1);
+});
