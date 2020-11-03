@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, AxiosInstance } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse, AxiosInstance } from 'axios';
 
 export class Api {
   axios: AxiosInstance;
