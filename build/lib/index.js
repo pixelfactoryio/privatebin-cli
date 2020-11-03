@@ -35,12 +35,6 @@ class Privatebin extends api_1.Api {
     postPaste(pasteData, options) {
         const { expire } = options;
         const { ct, adata } = pasteData;
-        console.log(JSON.stringify({
-            v: 2,
-            ct,
-            adata,
-            meta: { expire },
-        }));
         return this.post('/', {
             v: 2,
             ct,
