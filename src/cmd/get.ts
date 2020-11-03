@@ -10,7 +10,7 @@ export async function getCmdAction(pasteUrl: string): Promise<Paste> {
   const key = u.hash.substring(1);
 
   const privatebin = new PrivatebinClient(u.origin);
-  return await privatebin.decryptPaste(id, decode(key));
+  return await privatebin.getText(id, decode(key));
 }
 
 export function New(): commander.Command {

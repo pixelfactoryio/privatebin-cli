@@ -17,7 +17,7 @@ function formatResponse(response: Response, host: string, randomKey: Buffer): Ou
 
 async function sendCmdAction(message: string, key: Buffer, options: Options): Promise<Response> {
   const privatebin = new PrivatebinClient(options.url);
-  return await privatebin.encryptPaste(message, key, options);
+  return await privatebin.sendText(message, key, options);
 }
 
 function validateExpire(val: string): string {

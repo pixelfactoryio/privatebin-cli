@@ -50,7 +50,7 @@ export class PrivatebinClient extends Api {
     super(apiConfig);
   }
 
-  public async encryptPaste(message: string, key: Buffer, options: Options): Promise<Response> {
+  public async sendText(message: string, key: Buffer, options: Options): Promise<Response> {
     const { burnafterreading, opendiscussion, compression } = options;
     const spec = getSpec(burnafterreading, opendiscussion, compression);
     const pasteData = getBufferPaste(message, compression);
@@ -59,7 +59,7 @@ export class PrivatebinClient extends Api {
     return this.postPaste(chiperPaste, options);
   }
 
-  public async decryptPaste(id: string, key: Buffer): Promise<Paste> {
+  public async getText(id: string, key: Buffer): Promise<Paste> {
     const response = await this.getPaste(id);
     const paste = decryptMessage(response.ct, key, response.adata);
 
