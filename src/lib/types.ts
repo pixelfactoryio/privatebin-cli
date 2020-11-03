@@ -26,11 +26,17 @@ export type Spec = {
   opendiscussion: number;
 };
 
+export type Adata = [[string, string, number, number, number, string, string, string], string, number, number];
+
+export type Meta = {
+  expire: string;
+};
+
 export type PasteData = {
   v?: 2;
   ct: string; // Cipher Text
-  adata: Array<any>; // Additionnal data
-  meta?: object;
+  adata: Adata; // Additional data
+  meta?: Meta;
 };
 
 export type Options = {
@@ -41,5 +47,3 @@ export type Options = {
   output: 'text' | 'json' | 'yaml';
   compression: 'none' | 'zlib';
 };
-
-export type HandlerFunc = (message: string, options: Options) => Promise<any>;
