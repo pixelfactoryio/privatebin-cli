@@ -90,3 +90,6 @@ typings/
 
 # js map files
 *.js.map
+
+# Build directory
+build
