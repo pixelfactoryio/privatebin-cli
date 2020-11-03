@@ -1,11 +1,10 @@
 import commander from 'commander';
 import chalk from 'chalk';
 import YAML from 'yaml';
-import { AxiosRequestConfig } from 'axios';
 import { randomBytes } from 'crypto';
 import { encode } from 'bs58';
 
-import { Privatebin } from '../lib';
+import { PrivatebinClient } from '../lib';
 import { Response, Output, Options } from '../lib/types';
 
 function formatResponse(response: Response, host: string, randomKey: Buffer): Output {
@@ -17,17 +16,7 @@ function formatResponse(response: Response, host: string, randomKey: Buffer): Ou
 }
 
 async function sendCmdAction(message: string, key: Buffer, options: Options): Promise<Response> {
-  const apiConfig: AxiosRequestConfig = {
-    baseURL: options.url,
-    headers: {
-      common: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'JSONHttpRequest',
-      },
-    },
-  };
-
-  const privatebin = new Privatebin(apiConfig);
+  const privatebin = new PrivatebinClient(options.url);
   return await privatebin.encryptPaste(message, key, options);
 }
 

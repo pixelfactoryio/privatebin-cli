@@ -2,10 +2,9 @@ import tap from 'tap';
 import nock from 'nock';
 import { decode } from 'bs58';
 
-import { Privatebin } from '../src/lib';
+import { PrivatebinClient } from '../src/lib';
 import {
   host,
-  config,
   postPasteResponse,
   getPasteResponseZlib,
   getPasteResponse,
@@ -16,7 +15,7 @@ import {
   pasteObj,
 } from './mock';
 
-const privatebin = new Privatebin(config);
+const privatebin = new PrivatebinClient();
 
 tap.test('Should return a paste Response (compression: zlib)', async (t) => {
   nock(host).post('/').reply(200, postPasteResponse);

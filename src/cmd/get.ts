@@ -1,8 +1,7 @@
 import commander from 'commander';
 import { decode } from 'bs58';
-import { AxiosRequestConfig } from 'axios';
 
-import { Privatebin } from '../lib';
+import { PrivatebinClient } from '../lib';
 import { Paste } from '../lib/types';
 
 export async function getCmdAction(pasteUrl: string): Promise<Paste> {
@@ -10,17 +9,7 @@ export async function getCmdAction(pasteUrl: string): Promise<Paste> {
   const id = u.search.substring(1);
   const key = u.hash.substring(1);
 
-  const apiConfig: AxiosRequestConfig = {
-    baseURL: u.origin,
-    headers: {
-      common: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'JSONHttpRequest',
-      },
-    },
-  };
-
-  const privatebin = new Privatebin(apiConfig);
+  const privatebin = new PrivatebinClient(u.origin);
   return await privatebin.decryptPaste(id, decode(key));
 }
 

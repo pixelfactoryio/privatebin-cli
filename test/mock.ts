@@ -1,18 +1,6 @@
-import { AxiosRequestConfig } from 'axios';
-
 import { Spec, Options, Paste, Response, Output, PasteData } from '../src/lib/types';
 
-export const host = 'https://privatebin.dev.local';
-
-export const config: AxiosRequestConfig = {
-  baseURL: host,
-  headers: {
-    common: {
-      'Content-Type': 'application/json',
-      'X-Requested-With': 'JSONHttpRequest',
-    },
-  },
-};
+export const host = 'https://privatebin.net';
 
 export const msg = 'Hello World';
 
