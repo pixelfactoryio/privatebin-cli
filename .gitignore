@@ -93,3 +93,4 @@ typings/
 
 # Build directory
 build
+dist
