@@ -5,7 +5,7 @@ import { randomBytes } from 'crypto';
 import { encode } from 'bs58';
 
 import { PrivatebinClient } from '../lib';
-import { Response, Output, Options } from '../lib/types';
+import { Response, Output, Options } from '../lib';
 
 function formatResponse(response: Response, host: string, randomKey: Buffer): Output {
   return {
@@ -15,8 +15,8 @@ function formatResponse(response: Response, host: string, randomKey: Buffer): Ou
   };
 }
 
-async function sendCmdAction(text: string, key: Buffer, options: Options): Promise<Response> {
-  const privatebin = new PrivatebinClient(options.url);
+async function sendCmdAction(text: string, key: Buffer, url: string, options: Options): Promise<Response> {
+  const privatebin = new PrivatebinClient(url);
   return await privatebin.sendText(text, key, options);
 }
 
@@ -50,25 +50,24 @@ export function NewSendCmd(): commander.Command {
     .option('--compression <string>', 'use compression [zlib, none]', 'zlib')
     .option('-u, --url <string>', 'privateBin host', 'https://privatebin.net')
     .option('-o, --output [type]', 'output format [text, json, yaml]', validateOutput, 'text')
-    .action(async (text, options) => {
-      if (options.burnafterreading && options.opendiscussion) {
+    .action(async (text, args) => {
+      if (args.burnafterreading && args.opendiscussion) {
         throw new Error("You can't use --opendiscussion with --burnafterreading flag");
       }
 
       const key = randomBytes(32);
 
-      const response = await sendCmdAction(text, key, {
-        expire: options.expire,
-        url: options.url,
-        burnafterreading: options.burnafterreading ? 1 : 0,
-        opendiscussion: options.opendiscussion ? 1 : 0,
-        output: options.output,
-        compression: options.compression,
+      const response = await sendCmdAction(text, key, args.url, {
+        expire: args.expire,
+        burnafterreading: args.burnafterreading ? 1 : 0,
+        opendiscussion: args.opendiscussion ? 1 : 0,
+        output: args.output,
+        compression: args.compression,
       });
 
-      const paste = formatResponse(response, options.url, key);
+      const paste = formatResponse(response, args.url, key);
 
-      switch (options.output) {
+      switch (args.output) {
         case 'json':
           process.stdout.write(`${JSON.stringify(paste, null, 2)}\n`);
           break;

@@ -40,7 +40,6 @@ export type PasteData = {
 };
 
 export type Options = {
-  url: string;
   expire: '5min' | '10min' | '1hour' | '1day' | '1week' | '1month' | '1year' | 'never';
   burnafterreading: 0 | 1;
   opendiscussion: 0 | 1;
