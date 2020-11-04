@@ -22,9 +22,9 @@
     "url": "https://github.com/pixelfactoryio/privatebin-cli/issues"
   },
   "bin": {
-    "privatebin": "build/bin/privatebin.js"
+    "privatebin": "dist/bin/privatebin.js"
   },
-  "main": "build/lib/index.js",
+  "main": "dist/lib/index.js",
   "files": [
     "dist"
   ],
