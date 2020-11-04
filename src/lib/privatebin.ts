@@ -2,10 +2,17 @@ import pako from 'pako';
 import { AxiosResponse, AxiosRequestConfig } from 'axios';
 
 import { Api } from './api';
-import { PasteData, Paste, Response, Options, Spec, Adata } from './types';
+import {
+  PrivatebinPasteRequest,
+  PrivatebinPaste,
+  PrivatebinResponse,
+  PrivatebinOptions,
+  PrivatebinSpec,
+  PrivatebinAdata,
+} from './types';
 import { decrypt, encrypt } from './crypto';
 
-export function encryptText(text: string, key: Buffer, options: Options): PasteData {
+export function encryptText(text: string, key: Buffer, options: PrivatebinOptions): PrivatebinPasteRequest {
   const { burnafterreading, opendiscussion, compression } = options;
   const spec = getSpec(burnafterreading, opendiscussion, compression);
   const textBuf = textToBuffer(text, compression);
@@ -13,7 +20,7 @@ export function encryptText(text: string, key: Buffer, options: Options): PasteD
   return encrypt(Buffer.from(textBuf), key, spec);
 }
 
-export function decryptText(ct: string, key: Buffer, adata: Adata): Paste {
+export function decryptText(ct: string, key: Buffer, adata: PrivatebinAdata): PrivatebinPaste {
   const text = decrypt(ct, key, adata);
   if (adata[0][7] === 'zlib') {
     return JSON.parse(pako.inflateRaw(text, { to: 'string' }));
@@ -31,7 +38,7 @@ export function textToBuffer(text: string, compression?: string): Buffer | Uint8
   }
 }
 
-export function getSpec(burnafterreading: number, opendiscussion: number, compression: string): Spec {
+export function getSpec(burnafterreading: number, opendiscussion: number, compression: string): PrivatebinSpec {
   return {
     algo: 'aes',
     mode: 'gcm',
@@ -59,25 +66,30 @@ export class PrivatebinClient extends Api {
     super(apiConfig);
   }
 
-  public async sendText(text: string, key: Buffer, options: Options): Promise<Response> {
+  public async sendText(text: string, key: Buffer, options: PrivatebinOptions): Promise<PrivatebinResponse> {
     const payload = encryptText(text, key, options);
     return this.postPaste(payload, options);
   }
 
-  public async getText(id: string, key: Buffer): Promise<Paste> {
+  public async getText(id: string, key: Buffer): Promise<PrivatebinPaste> {
     const { ct, adata } = await this.getPaste(id);
     return decryptText(ct, key, adata);
   }
 
-  private getPaste(id: string): Promise<PasteData> {
-    return this.get<PasteData, AxiosResponse<PasteData>>(`/?pasteid=${id}`).then(this.success);
+  private getPaste(id: string): Promise<PrivatebinPasteRequest> {
+    return this.get<PrivatebinPasteRequest, AxiosResponse<PrivatebinPasteRequest>>(`/?pasteid=${id}`).then(
+      this.success,
+    );
   }
 
-  private postPaste(pasteData: PasteData, options: Options): Promise<Response> {
+  private postPaste(
+    PrivatebinPasteRequest: PrivatebinPasteRequest,
+    options: PrivatebinOptions,
+  ): Promise<PrivatebinResponse> {
     const { expire } = options;
-    const { ct, adata } = pasteData;
+    const { ct, adata } = PrivatebinPasteRequest;
 
-    return this.post<Response, PasteData, AxiosResponse<Response>>('/', {
+    return this.post<PrivatebinResponse, PrivatebinPasteRequest, AxiosResponse<PrivatebinResponse>>('/', {
       v: 2,
       ct,
       adata,

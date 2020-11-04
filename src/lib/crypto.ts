@@ -1,17 +1,17 @@
 import { pbkdf2Sync, randomBytes, createCipheriv, createDecipheriv, CipherGCMTypes } from 'crypto';
 
-import { Spec, PasteData, Adata } from './types';
+import { PrivatebinSpec, PrivatebinPasteRequest, PrivatebinAdata } from './types';
 
 export function deriveKey(masterkey: Buffer, salt: Buffer, iter: number): Buffer {
   // derive key: 32 byte key length
   return pbkdf2Sync(masterkey, salt, iter, 32, 'sha256');
 }
 
-export function encrypt(message: Buffer, masterkey: Buffer, spec: Spec): PasteData {
+export function encrypt(message: Buffer, masterkey: Buffer, spec: PrivatebinSpec): PrivatebinPasteRequest {
   const iv = randomBytes(16);
   const salt = randomBytes(8);
   const key = deriveKey(masterkey, salt, spec.iter);
-  const adata: Adata = [
+  const adata: PrivatebinAdata = [
     [
       iv.toString('base64'),
       salt.toString('base64'),
@@ -35,7 +35,7 @@ export function encrypt(message: Buffer, masterkey: Buffer, spec: Spec): PasteDa
   });
   cipher.setAAD(Buffer.from(JSON.stringify(adata), 'utf8'));
 
-  const pasteData: PasteData = {
+  const pasteData: PrivatebinPasteRequest = {
     ct: Buffer.concat([cipher.update(message), cipher.final(), cipher.getAuthTag()]).toString('base64'),
     adata,
   };
@@ -43,7 +43,7 @@ export function encrypt(message: Buffer, masterkey: Buffer, spec: Spec): PasteDa
   return pasteData;
 }
 
-export function decrypt(data: string, masterkey: Buffer, adata: Adata): Buffer {
+export function decrypt(data: string, masterkey: Buffer, adata: PrivatebinAdata): Buffer {
   const bData = Buffer.from(data, 'base64');
   const spec = adata[0];
   const iv = Buffer.from(spec[0], 'base64');

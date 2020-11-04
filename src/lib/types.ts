@@ -1,21 +1,21 @@
-export type Paste = {
+export type PrivatebinPaste = {
   paste: string;
 };
 
-export type Response = {
+export type PrivatebinResponse = {
   status: number;
   id: string;
   url: string;
   deletetoken: string;
 };
 
-export type Output = {
+export type PrivatebinOutput = {
   pasteId: string;
   pasteURL: string;
   deleteURL: string;
 };
 
-export type Spec = {
+export type PrivatebinSpec = {
   algo: string;
   mode: string;
   ks: number;
@@ -26,20 +26,25 @@ export type Spec = {
   opendiscussion: number;
 };
 
-export type Adata = [[string, string, number, number, number, string, string, string], string, number, number];
+export type PrivatebinAdata = [
+  [string, string, number, number, number, string, string, string],
+  string,
+  number,
+  number,
+];
 
-export type Meta = {
+export type PrivatebinMeta = {
   expire: string;
 };
 
-export type PasteData = {
+export type PrivatebinPasteRequest = {
   v?: 2;
   ct: string; // Cipher Text
-  adata: Adata; // Additional data
-  meta?: Meta;
+  adata: PrivatebinAdata; // Additional data
+  meta?: PrivatebinMeta;
 };
 
-export type Options = {
+export type PrivatebinOptions = {
   expire: '5min' | '10min' | '1hour' | '1day' | '1week' | '1month' | '1year' | 'never';
   burnafterreading: 0 | 1;
   opendiscussion: 0 | 1;

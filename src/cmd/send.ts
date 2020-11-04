@@ -5,9 +5,9 @@ import { randomBytes } from 'crypto';
 import { encode } from 'bs58';
 
 import { PrivatebinClient } from '../lib';
-import { Response, Output, Options } from '../lib';
+import { PrivatebinResponse, PrivatebinOutput, PrivatebinOptions } from '../lib';
 
-function formatResponse(response: Response, host: string, randomKey: Buffer): Output {
+function formatResponse(response: PrivatebinResponse, host: string, randomKey: Buffer): PrivatebinOutput {
   return {
     pasteId: response.id,
     pasteURL: `${host}${response.url}#${encode(randomKey)}`,
@@ -15,7 +15,12 @@ function formatResponse(response: Response, host: string, randomKey: Buffer): Ou
   };
 }
 
-async function sendCmdAction(text: string, key: Buffer, url: string, options: Options): Promise<Response> {
+async function sendCmdAction(
+  text: string,
+  key: Buffer,
+  url: string,
+  options: PrivatebinOptions,
+): Promise<PrivatebinResponse> {
   const privatebin = new PrivatebinClient(url);
   return await privatebin.sendText(text, key, options);
 }

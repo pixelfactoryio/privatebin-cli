@@ -2,9 +2,9 @@ import commander from 'commander';
 import { decode } from 'bs58';
 
 import { PrivatebinClient } from '../lib';
-import { Paste } from '../lib';
+import { PrivatebinPaste } from '../lib';
 
-export async function getCmdAction(pasteUrl: string): Promise<Paste> {
+export async function getCmdAction(pasteUrl: string): Promise<PrivatebinPaste> {
   const u = new URL(pasteUrl);
   const id = u.search.substring(1);
   const key = u.hash.substring(1);
