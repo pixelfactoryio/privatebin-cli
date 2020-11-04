@@ -3,7 +3,7 @@ import { decode } from 'bs58';
 
 import { pasteObj, pasteDataBuf, key, spec } from './mock';
 
-import { encrypt, decrypt } from '../src/lib/cryptotools';
+import { encrypt, decrypt } from '../src/lib/crypto';
 
 const { ct, adata } = encrypt(pasteDataBuf, decode(key), spec);
 const decrypted = decrypt(ct, decode(key), adata);

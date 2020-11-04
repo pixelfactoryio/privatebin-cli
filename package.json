@@ -22,9 +22,12 @@
     "url": "https://github.com/pixelfactoryio/privatebin-cli/issues"
   },
   "bin": {
-    "privatebin": "build/bin/privatebin.js"
+    "privatebin": "dist/bin/privatebin.js"
   },
-  "main": "build/lib/index.js",
+  "main": "dist/lib/index.js",
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
   "scripts": {
     "lint": "eslint -c .eslintrc.js --ext .ts src",
@@ -40,7 +43,6 @@
     "bs58": "^4.0.1",
     "chalk": "^4.1.0",
     "commander": "^6.2.0",
-    "esm": "^3.2.25",
     "pako": "^1.0.11",
     "pjson": "^1.0.9",
     "yaml": "^1.10.0"

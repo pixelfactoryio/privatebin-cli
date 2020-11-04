@@ -1,34 +1,23 @@
 import commander from 'commander';
 import { decode } from 'bs58';
-import { AxiosRequestConfig } from 'axios';
 
-import { Privatebin } from '../lib';
-import { Paste } from '../lib/types';
+import { PrivatebinClient } from '../lib';
+import { PrivatebinPaste } from '../lib';
 
-export async function getCmdAction(pasteUrl: string): Promise<Paste> {
+export async function getCmdAction(pasteUrl: string): Promise<PrivatebinPaste> {
   const u = new URL(pasteUrl);
   const id = u.search.substring(1);
   const key = u.hash.substring(1);
 
-  const apiConfig: AxiosRequestConfig = {
-    baseURL: u.origin,
-    headers: {
-      common: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'JSONHttpRequest',
-      },
-    },
-  };
-
-  const privatebin = new Privatebin(apiConfig);
-  return await privatebin.decryptPaste(id, decode(key));
+  const privatebin = new PrivatebinClient(u.origin);
+  return await privatebin.getText(id, decode(key));
 }
 
-export function New(): commander.Command {
-  const cmd = commander.command('get <pasteUrl>');
+export function NewGetCmd(): commander.Command {
+  const cmd = commander.command('get <url>');
 
-  cmd.description('get a message from privatebin').action(async (pasteUrl) => {
-    const paste = await getCmdAction(pasteUrl);
+  cmd.description('Get a text from privatebin').action(async (url) => {
+    const paste = await getCmdAction(url);
     process.stderr.write(`${paste.paste}\n`);
   });
   return cmd;

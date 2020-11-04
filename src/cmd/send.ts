@@ -1,14 +1,13 @@
 import commander from 'commander';
 import chalk from 'chalk';
 import YAML from 'yaml';
-import { AxiosRequestConfig } from 'axios';
 import { randomBytes } from 'crypto';
 import { encode } from 'bs58';
 
-import { Privatebin } from '../lib';
-import { Response, Output, Options } from '../lib/types';
+import { PrivatebinClient } from '../lib';
+import { PrivatebinResponse, PrivatebinOutput, PrivatebinOptions } from '../lib';
 
-function formatResponse(response: Response, host: string, randomKey: Buffer): Output {
+function formatResponse(response: PrivatebinResponse, host: string, randomKey: Buffer): PrivatebinOutput {
   return {
     pasteId: response.id,
     pasteURL: `${host}${response.url}#${encode(randomKey)}`,
@@ -16,19 +15,14 @@ function formatResponse(response: Response, host: string, randomKey: Buffer): Ou
   };
 }
 
-async function sendCmdAction(message: string, key: Buffer, options: Options): Promise<Response> {
-  const apiConfig: AxiosRequestConfig = {
-    baseURL: options.url,
-    headers: {
-      common: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'JSONHttpRequest',
-      },
-    },
-  };
-
-  const privatebin = new Privatebin(apiConfig);
-  return await privatebin.encryptPaste(message, key, options);
+async function sendCmdAction(
+  text: string,
+  key: Buffer,
+  url: string,
+  options: PrivatebinOptions,
+): Promise<PrivatebinResponse> {
+  const privatebin = new PrivatebinClient(url);
+  return await privatebin.sendText(text, key, options);
 }
 
 function validateExpire(val: string): string {
@@ -45,11 +39,11 @@ function validateOutput(val: string): string {
   throw new Error(`invalid output: ${val}`);
 }
 
-export function New(): commander.Command {
-  const cmd = commander.command('send <message>');
+export function NewSendCmd(): commander.Command {
+  const cmd = commander.command('send <text>');
 
   cmd
-    .description('post a message to privatebin')
+    .description('Send a text to privatebin')
     .option(
       '-e, --expire <string>',
       'paste expire time [5min, 10min, 1hour, 1day, 1week, 1month, 1year, never]',
@@ -61,25 +55,24 @@ export function New(): commander.Command {
     .option('--compression <string>', 'use compression [zlib, none]', 'zlib')
     .option('-u, --url <string>', 'privateBin host', 'https://privatebin.net')
     .option('-o, --output [type]', 'output format [text, json, yaml]', validateOutput, 'text')
-    .action(async (message, options) => {
-      if (options.burnafterreading && options.opendiscussion) {
+    .action(async (text, args) => {
+      if (args.burnafterreading && args.opendiscussion) {
         throw new Error("You can't use --opendiscussion with --burnafterreading flag");
       }
 
       const key = randomBytes(32);
 
-      const response = await sendCmdAction(message, key, {
-        expire: options.expire,
-        url: options.url,
-        burnafterreading: options.burnafterreading ? 1 : 0,
-        opendiscussion: options.opendiscussion ? 1 : 0,
-        output: options.output,
-        compression: options.compression,
+      const response = await sendCmdAction(text, key, args.url, {
+        expire: args.expire,
+        burnafterreading: args.burnafterreading ? 1 : 0,
+        opendiscussion: args.opendiscussion ? 1 : 0,
+        output: args.output,
+        compression: args.compression,
       });
 
-      const paste = formatResponse(response, options.url, key);
+      const paste = formatResponse(response, args.url, key);
 
-      switch (options.output) {
+      switch (args.output) {
         case 'json':
           process.stdout.write(`${JSON.stringify(paste, null, 2)}\n`);
           break;
