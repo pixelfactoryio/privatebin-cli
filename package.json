@@ -25,6 +25,9 @@
     "privatebin": "build/bin/privatebin.js"
   },
   "main": "build/lib/index.js",
+  "files": [
+    "build"
+  ],
   "license": "MIT",
   "scripts": {
     "lint": "eslint -c .eslintrc.js --ext .ts src",
