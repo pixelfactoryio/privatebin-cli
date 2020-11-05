@@ -1,3 +1,11 @@
+## [2.0.3](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.0.2...v2.0.3) (2020-11-05)
+
+
+### Bug Fixes
+
+* **ci:** add package.json to semantic-release/git file list ([66fa803](https://github.com/pixelfactoryio/privatebin-cli/commit/66fa803a2eb15578677d7fb4cf250a9546af708a))
+* **ci:** build application before running semantic-release ([7b5f8d1](https://github.com/pixelfactoryio/privatebin-cli/commit/7b5f8d197068bc08ba2adc6c91dedeb42c3aff4a))
+
 ## [2.0.2](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.0.1...v2.0.2) (2020-11-05)
 
 
