@@ -6,13 +6,9 @@
 
 ### BREAKING CHANGES
 
-* - rename class Privatebin to PrivatebinClient
-- make default baseUrl = privatebin.net
-- rename function encryptPaste to sendText
-- rename function decryptPaste to getText
-
-* Update types names:
-- prefix all types with Privatebin
+- rename Class `Privatebin` to `PrivatebinClient`
+- make `baseUrl` defaults to `privatebin.net`
+- rename function `encryptPaste()` to `sendText()`
+- rename function `decryptPaste()` to `getText()`
+- prefix all types with `Privatebin`
 - export types
-
-* chore(ci): add semantic-release
