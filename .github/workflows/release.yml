@@ -28,6 +28,9 @@ jobs:
       - name: Run tests
         run: npm run test
 
+      - name: Run tests
+        run: npm run build
+
       - name: Release
         env:
           NPM_EMAIL: "amine@pixelfactory.io"
