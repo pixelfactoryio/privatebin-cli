@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.0.1...v2.0.2) (2020-11-05)
+
+
+### Bug Fixes
+
+* **ci:** configure semantic-release to publish to NPM registry ([#28](https://github.com/pixelfactoryio/privatebin-cli/issues/28)) ([f9e86d0](https://github.com/pixelfactoryio/privatebin-cli/commit/f9e86d04d6f874d394c8e8692e4ec95ddab46e10))
+
 ## [2.0.1](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.0.0...v2.0.1) (2020-11-05)
 
 
