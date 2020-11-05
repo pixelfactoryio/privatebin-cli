@@ -1,6 +1,6 @@
 {
   "name": "@pixelfactory/privatebin",
-  "version": "1.0.2",
+  "version": "2.0.0-development",
   "homepage": "https://github.com/pixelfactoryio/privatebin-cli",
   "description": "a PrivateBin client written in typescript",
   "author": "Amine Benseddik <amine@pixelfactory.io>",
@@ -15,7 +15,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pixelfactoryio/privatebin-cli.git"
+    "url": "https://github.com/pixelfactoryio/privatebin-cli.git"
   },
   "readme": "https://github.com/pixelfactoryio/privatebin-cli#readme",
   "bugs": {
@@ -36,7 +36,33 @@
     "posttest": "tap --coverage-report=text-lcov > coverage.out",
     "dev": "tsc --build --watch",
     "clean": "tsc --build --clean",
-    "build": "npm run clean && tsc --build"
+    "build": "npm run clean && tsc --build",
+    "semantic-release": "semantic-release"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/changelog",
+        {
+          "changelogFile": "CHANGELOG.md"
+        }
+      ],
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "CHANGELOG.md"
+          ]
+        }
+      ]
+    ]
   },
   "dependencies": {
     "axios": "^0.21.0",
@@ -48,6 +74,10 @@
     "yaml": "^1.10.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/git": "^9.0.0",
     "@types/bs58": "^4.0.1",
     "@types/node": "^14.14.6",
     "@types/pako": "^1.0.1",
@@ -57,8 +87,10 @@
     "eslint": "^7.12.1",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.3.0",
     "nock": "^13.0.4",
     "prettier": "^2.1.2",
+    "semantic-release": "^17.2.2",
     "tap": "^14.10.8",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.5"
