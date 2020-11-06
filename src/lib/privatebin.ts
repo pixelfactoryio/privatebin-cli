@@ -1,45 +1,23 @@
 import pako from 'pako';
 import { AxiosResponse, AxiosRequestConfig } from 'axios';
 
-import { Api } from './api';
 import {
   PrivatebinPasteRequest,
   PrivatebinPaste,
   PrivatebinResponse,
   PrivatebinOptions,
-  PrivatebinSpec,
   PrivatebinAdata,
 } from './types';
-import { decrypt, encrypt } from './crypto';
+import { Api } from './api';
+import { decrypt, encrypt, stringToUint8Array, uint8ArrayToString } from './crypto';
 
-export function encryptText(text: string, key: Buffer, options: PrivatebinOptions): PrivatebinPasteRequest {
+export async function encryptText(
+  text: string,
+  key: Uint8Array,
+  options: PrivatebinOptions,
+): Promise<PrivatebinPasteRequest> {
   const { burnafterreading, opendiscussion, compression } = options;
-  const spec = getSpec(burnafterreading, opendiscussion, compression);
-  const textBuf = textToBuffer(text, compression);
-
-  return encrypt(Buffer.from(textBuf), key, spec);
-}
-
-export function decryptText(ct: string, key: Buffer, adata: PrivatebinAdata): PrivatebinPaste {
-  const text = decrypt(ct, key, adata);
-  if (adata[0][7] === 'zlib') {
-    return JSON.parse(pako.inflateRaw(text, { to: 'string' }));
-  }
-
-  return JSON.parse(text.toString());
-}
-
-export function textToBuffer(text: string, compression?: string): Buffer | Uint8Array {
-  const buf = Buffer.from(JSON.stringify({ paste: text }), 'utf8');
-  if (compression === 'zlib') {
-    return pako.deflateRaw(new Uint8Array(buf));
-  } else {
-    return buf;
-  }
-}
-
-export function getSpec(burnafterreading: number, opendiscussion: number, compression: string): PrivatebinSpec {
-  return {
+  const spec = {
     algo: 'aes',
     mode: 'gcm',
     ks: 256,
@@ -49,6 +27,22 @@ export function getSpec(burnafterreading: number, opendiscussion: number, compre
     burnafterreading,
     opendiscussion,
   };
+
+  let buf = stringToUint8Array(JSON.stringify({ paste: text }));
+  if (compression === 'zlib') {
+    buf = pako.deflateRaw(buf);
+  }
+
+  return encrypt(buf, key, spec);
+}
+
+export async function decryptText(ct: string, key: Uint8Array, adata: PrivatebinAdata): Promise<PrivatebinPaste> {
+  const buf = await decrypt(ct, key, adata);
+  if (adata[0][7] === 'zlib') {
+    return JSON.parse(pako.inflateRaw(buf, { to: 'string' }));
+  }
+
+  return JSON.parse(uint8ArrayToString(buf));
 }
 
 export class PrivatebinClient extends Api {
@@ -66,12 +60,12 @@ export class PrivatebinClient extends Api {
     super(apiConfig);
   }
 
-  public async sendText(text: string, key: Buffer, options: PrivatebinOptions): Promise<PrivatebinResponse> {
-    const payload = encryptText(text, key, options);
+  public async sendText(text: string, key: Uint8Array, options: PrivatebinOptions): Promise<PrivatebinResponse> {
+    const payload = await encryptText(text, key, options);
     return this.postPaste(payload, options);
   }
 
-  public async getText(id: string, key: Buffer): Promise<PrivatebinPaste> {
+  public async getText(id: string, key: Uint8Array): Promise<PrivatebinPaste> {
     const { ct, adata } = await this.getPaste(id);
     return decryptText(ct, key, adata);
   }

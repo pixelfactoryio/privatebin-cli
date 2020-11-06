@@ -1,69 +1,77 @@
-import { pbkdf2Sync, randomBytes, createCipheriv, createDecipheriv, CipherGCMTypes } from 'crypto';
+import crypto from 'isomorphic-webcrypto';
+import { bytesToBase64, base64ToBytes } from 'byte-base64';
 
 import { PrivatebinSpec, PrivatebinPasteRequest, PrivatebinAdata } from './types';
 
-export function deriveKey(masterkey: Buffer, salt: Buffer, iter: number): Buffer {
-  // derive key: 32 byte key length
-  return pbkdf2Sync(masterkey, salt, iter, 32, 'sha256');
+export function importKey(key: Uint8Array): Promise<CryptoKey> {
+  return crypto.subtle.importKey('raw', key, 'PBKDF2', false, ['deriveBits', 'deriveKey']);
 }
 
-export function encrypt(message: Buffer, masterkey: Buffer, spec: PrivatebinSpec): PrivatebinPasteRequest {
-  const iv = randomBytes(16);
-  const salt = randomBytes(8);
-  const key = deriveKey(masterkey, salt, spec.iter);
+export function deriveKey(key: CryptoKey, salt: Uint8Array, iterations: number, keyLength: number): Promise<CryptoKey> {
+  return crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt, iterations, hash: 'SHA-256' },
+    key,
+    { name: 'AES-GCM', length: keyLength },
+    false,
+    ['encrypt', 'decrypt'],
+  );
+}
+
+export function stringToUint8Array(str: string): Uint8Array {
+  const encoder = new TextEncoder();
+  return encoder.encode(str);
+}
+
+export function uint8ArrayToString(buf: Uint8Array): string {
+  const decoder = new TextDecoder();
+  return decoder.decode(buf);
+}
+
+export async function encrypt(
+  message: Uint8Array,
+  masterkey: Uint8Array,
+  spec: PrivatebinSpec,
+): Promise<PrivatebinPasteRequest> {
+  const key = await importKey(masterkey);
+  const iv = crypto.getRandomValues(new Uint8Array(16));
+  const salt = crypto.getRandomValues(new Uint8Array(8));
+  const derivedKey = await deriveKey(key, salt, spec.iter, spec.ks);
+
   const adata: PrivatebinAdata = [
-    [
-      iv.toString('base64'),
-      salt.toString('base64'),
-      spec.iter,
-      spec.ks,
-      spec.ts,
-      spec.algo,
-      spec.mode,
-      spec.compression,
-    ],
+    [bytesToBase64(iv), bytesToBase64(salt), spec.iter, spec.ks, spec.ts, spec.algo, spec.mode, spec.compression],
     'plaintext',
     spec.opendiscussion,
     spec.burnafterreading,
   ];
 
-  const algorithm = `${spec.algo}-${spec.ks}-${spec.mode}` as CipherGCMTypes;
+  const encData = await crypto.subtle.encrypt(
+    { name: 'AES-GCM', iv, additionalData: stringToUint8Array(JSON.stringify(adata)), tagLength: spec.ts },
+    derivedKey,
+    message,
+  );
 
-  // AES 256 GCM Mode
-  const cipher = createCipheriv(algorithm, key, iv, {
-    authTagLength: Math.floor(spec.ts * 0.125),
-  });
-  cipher.setAAD(Buffer.from(JSON.stringify(adata), 'utf8'));
-
-  const pasteData: PrivatebinPasteRequest = {
-    ct: Buffer.concat([cipher.update(message), cipher.final(), cipher.getAuthTag()]).toString('base64'),
+  return {
+    ct: bytesToBase64(new Uint8Array(encData)),
     adata,
   };
-
-  return pasteData;
 }
 
-export function decrypt(data: string, masterkey: Buffer, adata: PrivatebinAdata): Buffer {
-  const bData = Buffer.from(data, 'base64');
+export async function decrypt(data: string, masterkey: Uint8Array, adata: PrivatebinAdata): Promise<Uint8Array> {
+  const bData = base64ToBytes(data);
   const spec = adata[0];
-  const iv = Buffer.from(spec[0], 'base64');
-  const salt = Buffer.from(spec[1], 'base64');
-  const iter = spec[2];
-  const ts = Math.floor(spec[4] * 0.125); // Tag size
-  const ms = bData.length - ts; // Message size
-  const key = deriveKey(masterkey, salt, iter);
+  const iv = base64ToBytes(spec[0]);
+  const salt = base64ToBytes(spec[1]);
+  const iterations = spec[2];
+  const ts = spec[4];
 
-  // convert data to buffers
-  const encrypted = bData.slice(0, ms);
-  const tag = bData.slice(ms, bData.length);
+  const key = await importKey(masterkey);
+  const derivedKey = await deriveKey(key, salt, iterations, 256);
 
-  // AES 256 GCM Mode
-  const decipher = createDecipheriv(`${spec[5]}-${spec[3]}-${spec[6]}` as CipherGCMTypes, key, iv);
-  decipher.setAuthTag(tag);
-  decipher.setAAD(Buffer.from(JSON.stringify(adata), 'utf8'));
+  const clearData = await crypto.subtle.decrypt(
+    { name: 'AES-GCM', iv, additionalData: stringToUint8Array(JSON.stringify(adata)), tagLength: ts },
+    derivedKey,
+    bData,
+  );
 
-  // decrypt the given encrypted
-  const decrypted = Buffer.concat([decipher.update(new Uint8Array(encrypted)), decipher.final()]);
-
-  return decrypted;
+  return new Uint8Array(clearData);
 }

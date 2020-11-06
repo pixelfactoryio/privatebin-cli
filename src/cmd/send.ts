@@ -1,13 +1,13 @@
 import commander from 'commander';
 import chalk from 'chalk';
 import YAML from 'yaml';
-import { randomBytes } from 'crypto';
+import crypto from 'isomorphic-webcrypto';
 import { encode } from 'bs58';
 
 import { PrivatebinClient } from '../lib';
 import { PrivatebinResponse, PrivatebinOutput, PrivatebinOptions } from '../lib';
 
-function formatResponse(response: PrivatebinResponse, host: string, randomKey: Buffer): PrivatebinOutput {
+function formatResponse(response: PrivatebinResponse, host: string, randomKey: Uint8Array): PrivatebinOutput {
   return {
     pasteId: response.id,
     pasteURL: `${host}${response.url}#${encode(randomKey)}`,
@@ -17,7 +17,7 @@ function formatResponse(response: PrivatebinResponse, host: string, randomKey: B
 
 async function sendCmdAction(
   text: string,
-  key: Buffer,
+  key: Uint8Array,
   url: string,
   options: PrivatebinOptions,
 ): Promise<PrivatebinResponse> {
@@ -60,7 +60,7 @@ export function NewSendCmd(): commander.Command {
         throw new Error("You can't use --opendiscussion with --burnafterreading flag");
       }
 
-      const key = randomBytes(32);
+      const key = crypto.getRandomValues(new Uint8Array(32));
 
       const response = await sendCmdAction(text, key, args.url, {
         expire: args.expire,
