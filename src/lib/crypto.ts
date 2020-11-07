@@ -1,7 +1,9 @@
-import crypto from 'isomorphic-webcrypto';
+import { Crypto } from '@peculiar/webcrypto';
 import { bytesToBase64, base64ToBytes } from 'byte-base64';
 
 import { PrivatebinSpec, PrivatebinPasteRequest, PrivatebinAdata } from './types';
+
+export const crypto = new Crypto();
 
 export function importKey(key: Uint8Array): Promise<CryptoKey> {
   return crypto.subtle.importKey('raw', key, 'PBKDF2', false, ['deriveBits', 'deriveKey']);
