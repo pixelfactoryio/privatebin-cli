@@ -1,3 +1,15 @@
+# [2.1.0](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.0.3...v2.1.0) (2020-11-07)
+
+
+### Bug Fixes
+
+* use @peculiar/webcrypto instead of isomorphic-webcrypto ([#30](https://github.com/pixelfactoryio/privatebin-cli/issues/30)) ([82a74bc](https://github.com/pixelfactoryio/privatebin-cli/commit/82a74bc6eba086bb9b3ec37c0cd774b7d3bc0169))
+
+
+### Features
+
+* **crypto:** use isomorphic-webcrypto ([#29](https://github.com/pixelfactoryio/privatebin-cli/issues/29)) ([185e8cc](https://github.com/pixelfactoryio/privatebin-cli/commit/185e8cc8870f88bb6b2682aa3ac953d28d328e5e))
+
 ## [2.0.3](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.0.2...v2.0.3) (2020-11-05)
 
 
