@@ -6,6 +6,7 @@ import {
   PrivatebinOutput,
   PrivatebinPasteRequest,
 } from '../src/lib/types';
+import { stringToUint8Array } from '../src/lib/crypto';
 
 export const host = 'https://privatebin.net';
 
@@ -36,7 +37,7 @@ export const getPasteResponse: PrivatebinPasteRequest = {
   meta: { expire: '5min' },
 };
 
-export const pasteDataBuf = Buffer.from(JSON.stringify(pasteObj), 'utf8');
+export const pasteDataBuf = stringToUint8Array(JSON.stringify(pasteObj));
 
 export const opts: PrivatebinOptions = {
   expire: '5min',

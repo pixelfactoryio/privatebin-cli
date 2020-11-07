@@ -16,8 +16,8 @@ function CLI(process: NodeJS.Process, version: string): Promise<commander.Comman
   if (process.stdin.isTTY) {
     return program.parseAsync(process.argv);
   } else {
-    const stdinBuffer = fs.readFileSync(0); // STDIN_FILENO = 0
-    process.argv.push(stdinBuffer.toString('utf8').trim());
+    const stdinBuf = fs.readFileSync(0); // STDIN_FILENO = 0
+    process.argv.push(stdinBuf.toString('utf8').trim());
     return program.parseAsync(process.argv);
   }
 }
