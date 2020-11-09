@@ -35,13 +35,14 @@
   "scripts": {
     "lint": "eslint -c .eslintrc.js --ext .ts src",
     "lintfix": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
-    "test": "tap -J --timeout=300",
+    "test": "tap -J --timeout=300 --invert --grep=build",
     "posttest": "tap --coverage-report=text-lcov > coverage.out",
     "dev": "tsc --build --watch",
     "clean": "rimraf dist",
+    "build": "npm run clean && npm run build:rollup && npm run build:tsc && npm run build:test",
     "build:tsc": "tsc --project src/tsconfig.json",
     "build:rollup": "rollup -c",
-    "build": "npm run clean && npm run build:rollup && npm run build:tsc",
+    "build:test": "node test-build.js",
     "semantic-release": "semantic-release"
   },
   "dependencies": {
