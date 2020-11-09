@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.1.0...v2.2.0) (2020-11-09)
+
+
+### Features
+
+* **esm:** publish ES module using Rollup.js ([#31](https://github.com/pixelfactoryio/privatebin-cli/issues/31)) ([9fdee38](https://github.com/pixelfactoryio/privatebin-cli/commit/9fdee38665585c814d30573aa8509bd904786e9f))
+
 # [2.1.0](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.0.3...v2.1.0) (2020-11-07)
 
 
