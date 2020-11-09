@@ -1,9 +1,9 @@
 import commander from 'commander';
 import chalk from 'chalk';
 import YAML from 'yaml';
+import crypto from 'isomorphic-webcrypto';
 import { encode } from 'bs58';
 
-import { crypto } from '../lib/crypto';
 import { PrivatebinClient } from '../lib';
 import { PrivatebinResponse, PrivatebinOutput, PrivatebinOptions } from '../lib';
 
