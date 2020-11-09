@@ -1,27 +1,15 @@
 import typescript from '@rollup/plugin-typescript';
-import minify from 'rollup-plugin-babel-minify';
+import { terser } from 'rollup-plugin-terser';
 
 const getConfig = ({ output, isMinify }) => {
   return {
     input: 'src/lib/index.ts',
     output: {
-      // dir: 'dist',
       file: output,
       format: 'esm',
       sourcemap: true,
     },
-    plugins: [
-      typescript({
-        module: 'esnext',
-      }),
-      ...(isMinify
-        ? [
-            minify({
-              comments: false,
-            }),
-          ]
-        : []),
-    ],
+    plugins: [typescript({ module: 'esnext' }), ...(isMinify ? [terser()] : [])],
   };
 };
 
