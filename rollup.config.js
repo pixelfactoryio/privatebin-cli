@@ -25,15 +25,21 @@ export default [
   // ES Module
   getConfig({ output: { entryFileNames: 'module/index.mjs', format: 'esm' } }),
   getConfig({ output: { entryFileNames: 'module/index.min.mjs', format: 'esm' }, plugins: [terser()] }),
+
   // Browser UMD
   getConfig({
     output: { entryFileNames: 'browser/index.js', format: 'umd' },
     plugins: [nodeResolve({ browser: true }), commonjs(), json()],
   }),
-  getConfig({ output: { entryFileNames: 'browser/index.min.js', format: 'umd' }, plugins: [terser()] }),
+  getConfig({
+    output: { entryFileNames: 'browser/index.min.js', format: 'umd' },
+    plugins: [nodeResolve({ browser: true }), commonjs(), json(), terser()],
+  }),
+
   // CommonJS
   getConfig({ output: { entryFileNames: 'main/index.js', format: 'cjs' } }),
   getConfig({ output: { entryFileNames: 'main/index.min.js', format: 'cjs' }, plugins: [terser()] }),
+
   // Binary
   getConfig({
     input: 'src/cmd/index.ts',
