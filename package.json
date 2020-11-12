@@ -27,7 +27,7 @@
   "main": "dist/main/index.js",
   "module": "dist/module/index.mjs",
   "browser": "dist/browser/index.js",
-  "types": "dist/types/src/lib/index.d.ts",
+  "types": "dist/types/lib/index.d.ts",
   "files": [
     "dist"
   ],
