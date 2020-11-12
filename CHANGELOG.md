@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.2.0...v2.3.0) (2020-11-12)
+
+
+### Features
+
+* **browser:** build browser umd module ([#32](https://github.com/pixelfactoryio/privatebin-cli/issues/32)) ([2d16101](https://github.com/pixelfactoryio/privatebin-cli/commit/2d16101f4edfe67fd7631433a8f96e883de5a58f))
+
 # [2.2.0](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.1.0...v2.2.0) (2020-11-09)
 
 
