@@ -20,7 +20,7 @@ jobs:
           node-version: 14
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --no-optional
 
       - name: Run linter
         run: npm run lint
@@ -28,7 +28,7 @@ jobs:
       - name: Run tests
         run: npm run test
 
-      - name: Run tests
+      - name: Run build
         run: npm run build
 
       - name: Release
