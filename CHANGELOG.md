@@ -1,3 +1,10 @@
+## [2.3.1](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.3.0...v2.3.1) (2020-11-12)
+
+
+### Bug Fixes
+
+* **browser:** fix minified umd build ([8564a84](https://github.com/pixelfactoryio/privatebin-cli/commit/8564a842e7320edbdc14a2899e11c15e6c1873ef))
+
 # [2.3.0](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.2.0...v2.3.0) (2020-11-12)
 
 
