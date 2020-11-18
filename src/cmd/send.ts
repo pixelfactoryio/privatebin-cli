@@ -4,10 +4,8 @@ import YAML from 'yaml';
 import crypto from 'isomorphic-webcrypto';
 import { encode } from 'bs58';
 
-import { readPassword } from './utils';
-import { concatUint8Array, stringToUint8Array } from '../lib/crypto';
-import { PrivatebinClient } from '../lib/privatebin';
-import { PrivatebinResponse, PrivatebinOutput, PrivatebinOptions } from '../lib/types';
+import { PrivatebinClient } from '../lib';
+import { PrivatebinResponse, PrivatebinOutput, PrivatebinOptions } from '../lib';
 
 function formatResponse(response: PrivatebinResponse, host: string, randomKey: Uint8Array): PrivatebinOutput {
   return {
@@ -55,23 +53,16 @@ export function NewSendCmd(): commander.Command {
     .option('--burnafterreading', 'burn after reading', false)
     .option('--opendiscussion', 'open discussion', false)
     .option('--compression <string>', 'use compression [zlib, none]', 'zlib')
-    .option('-p, --password', 'prompt for password', false)
     .option('-u, --url <string>', 'privateBin host', 'https://privatebin.net')
-    .option('-o, --output <string>', 'output format [text, json, yaml]', validateOutput, 'text')
+    .option('-o, --output [type]', 'output format [text, json, yaml]', validateOutput, 'text')
     .action(async (text, args) => {
       if (args.burnafterreading && args.opendiscussion) {
         throw new Error("You can't use --opendiscussion with --burnafterreading flag");
       }
 
-      let password = '';
-      if (args.password) {
-        password = await readPassword();
-      }
+      const key = crypto.getRandomValues(new Uint8Array(32));
 
-      const randomKey = crypto.getRandomValues(new Uint8Array(32));
-      const passPhrase = concatUint8Array(randomKey, stringToUint8Array(password));
-
-      const response = await sendCmdAction(text, passPhrase, args.url, {
+      const response = await sendCmdAction(text, key, args.url, {
         expire: args.expire,
         burnafterreading: args.burnafterreading ? 1 : 0,
         opendiscussion: args.opendiscussion ? 1 : 0,
@@ -79,7 +70,7 @@ export function NewSendCmd(): commander.Command {
         compression: args.compression,
       });
 
-      const paste = formatResponse(response, args.url, randomKey);
+      const paste = formatResponse(response, args.url, key);
 
       switch (args.output) {
         case 'json':

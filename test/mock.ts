@@ -24,7 +24,6 @@ export const postPasteResponse: PrivatebinResponse = {
 };
 
 export const getPasteResponseZlib: PrivatebinPasteRequest = {
-  status: 0,
   v: 2,
   adata: [['knT4DMZrlyYKv5VPSdYRlg==', '6cVoVXe1R/4=', 100000, 256, 128, 'aes', 'gcm', 'zlib'], 'plaintext', 0, 0],
   ct: 'PWq5P7FeVqBsIRjt8yEX5DpQfnVc63Jboxknh/NLE2sVmftyK99D6pQ=',
@@ -32,7 +31,6 @@ export const getPasteResponseZlib: PrivatebinPasteRequest = {
 };
 
 export const getPasteResponse: PrivatebinPasteRequest = {
-  status: 0,
   v: 2,
   adata: [['lZl+nQfkQUJbTrrrgcFT9A==', 'WX1e1AU7+EI=', 100000, 256, 128, 'aes', 'gcm', 'none'], 'plaintext', 0, 0],
   ct: 'z4xybqQb8N8UIZo07QVaOobDh379gaZhT9RuazqYNuQLNxQLKYwU',
