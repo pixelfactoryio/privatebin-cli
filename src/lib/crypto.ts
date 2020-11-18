@@ -27,6 +27,13 @@ export function uint8ArrayToString(buf: Uint8Array): string {
   return decoder.decode(buf);
 }
 
+export function concatUint8Array(arr1: Uint8Array, arr2: Uint8Array): Uint8Array {
+  const result = new Uint8Array(arr1.length + arr2.length);
+  result.set(arr1);
+  result.set(arr2, arr1.length);
+  return result;
+}
+
 export async function encrypt(
   message: Uint8Array,
   masterkey: Uint8Array,

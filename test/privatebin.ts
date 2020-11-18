@@ -50,3 +50,13 @@ tap.test('Should reject', async (t) => {
   nock(host).post('/').reply(404, {});
   t.rejects(privatebin.sendText(msg, decode(key), opts));
 });
+
+tap.test('Should reject', async (t) => {
+  nock(host).get('/').reply(404, {});
+  t.rejects(privatebin.getText('123', decode(key)));
+});
+
+tap.test('Should reject', async (t) => {
+  nock(host).get('/?pasteid=123').reply(200, { status: 1, message: 'Invalid paste ID.' });
+  t.rejects(privatebin.getText('123', decode(key)));
+});
