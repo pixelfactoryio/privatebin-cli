@@ -15,17 +15,18 @@ npm install -g @pixelfactory/privatebin
 
 ```bash
 $ privatebin send --help
-Usage: privatebin send [options] <message>
+Usage: privatebin send [options] <text>
 
-post a message to privatebin
+Send a text to privatebin
 
 Options:
   -e, --expire <string>   paste expire time [5min, 10min, 1hour, 1day, 1week, 1month, 1year, never] (default: "1week")
   --burnafterreading      burn after reading (default: false)
   --opendiscussion        open discussion (default: false)
   --compression <string>  use compression [zlib, none] (default: "zlib")
+  -p, --password          prompt for password (default: false)
   -u, --url <string>      privateBin host (default: "https://privatebin.net")
-  -o, --output [type]     output format [text, json, yaml] (default: "text")
+  -o, --output <string>   output format [text, json, yaml] (default: "text")
   -h, --help              display help for command
 ```
 
