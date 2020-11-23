@@ -1,3 +1,24 @@
+# [2.4.0](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.3.1...v2.4.0) (2020-11-18)
+
+
+### Features
+
+* **password:** support password protected paste ([#36](https://github.com/pixelfactoryio/privatebin-cli/issues/36)) ([812780d](https://github.com/pixelfactoryio/privatebin-cli/commit/812780d88c2cfd5881319b812b6832728f2abefa))
+
+## [2.3.1](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.3.0...v2.3.1) (2020-11-12)
+
+
+### Bug Fixes
+
+* **browser:** fix minified umd build ([8564a84](https://github.com/pixelfactoryio/privatebin-cli/commit/8564a842e7320edbdc14a2899e11c15e6c1873ef))
+
+# [2.3.0](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.2.0...v2.3.0) (2020-11-12)
+
+
+### Features
+
+* **browser:** build browser umd module ([#32](https://github.com/pixelfactoryio/privatebin-cli/issues/32)) ([2d16101](https://github.com/pixelfactoryio/privatebin-cli/commit/2d16101f4edfe67fd7631433a8f96e883de5a58f))
+
 # [2.2.0](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.1.0...v2.2.0) (2020-11-09)
 
 

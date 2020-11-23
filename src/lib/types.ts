@@ -38,6 +38,8 @@ export type PrivatebinMeta = {
 };
 
 export type PrivatebinPasteRequest = {
+  status?: number;
+  message?: string;
   v?: 2;
   ct: string; // Cipher Text
   adata: PrivatebinAdata; // Additional data

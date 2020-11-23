@@ -66,8 +66,12 @@ export class PrivatebinClient extends Api {
   }
 
   public async getText(id: string, key: Uint8Array): Promise<PrivatebinPaste> {
-    const { ct, adata } = await this.getPaste(id);
-    return decryptText(ct, key, adata);
+    const { status, message, ct, adata } = await this.getPaste(id);
+    if (status == 0) {
+      return decryptText(ct, key, adata);
+    } else {
+      throw new Error(message);
+    }
   }
 
   private getPaste(id: string): Promise<PrivatebinPasteRequest> {
