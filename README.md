@@ -3,13 +3,15 @@
 ![CI](https://github.com/pixelfactoryio/privatebin-cli/workflows/CI/badge.svg)
 [![codecov](https://codecov.io/gh/pixelfactoryio/privatebin-cli/branch/master/graph/badge.svg)](https://codecov.io/gh/pixelfactoryio/privatebin-cli)
 
+Privatebin-cli is Javascript Command Line tool and a Client Library to interact with privatebin (https://privatebin.net)
+
 ## Install
 
 ```bash
 npm install -g @pixelfactory/privatebin
 ```
 
-## Usage
+## Command Line
 
 ### Send command
 
@@ -67,4 +69,33 @@ Options:
 ```bash
 $ privatebin get "https://privatebin.net/?ccd05227e7bab99c#GWk29DqQx6NAfMYHgMeDeR76QSyL82fHHg5yGu3U8fft"
 Hello World
+```
+
+## Library
+
+### Install
+
+```bash
+npm install @pixelfactory/privatebin
+```
+
+### Usage
+
+```javascript
+import { PrivatebinClient } from '@pixelfactory/privatebin';
+
+const privatebin = new PrivatebinClient();
+const key = crypto.getRandomValues(new Uint8Array(32));
+const msg = 'Hello World!';
+
+const opts = {
+  expire: '5min',
+  burnafterreading: 0,
+  opendiscussion: 0,
+  output: 'text',
+  compression: 'zlib',
+};
+
+const paste = privatebin.sendText(msg, key, opts);
+console.log(paste);
 ```
