@@ -24,6 +24,7 @@ export type PrivatebinSpec = {
   compression: string;
   burnafterreading: number;
   opendiscussion: number;
+  textformat: string;
 };
 
 export type PrivatebinAdata = [
@@ -52,4 +53,5 @@ export type PrivatebinOptions = {
   opendiscussion: 0 | 1;
   output: 'text' | 'json' | 'yaml';
   compression: 'none' | 'zlib';
+  textformat: 'plaintext' | 'markdown';
 };

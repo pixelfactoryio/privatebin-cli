@@ -16,13 +16,14 @@ export async function encryptText(
   key: Uint8Array,
   options: PrivatebinOptions,
 ): Promise<PrivatebinPasteRequest> {
-  const { burnafterreading, opendiscussion, compression } = options;
+  const { burnafterreading, opendiscussion, compression, textformat } = options;
   const spec = {
     algo: 'aes',
     mode: 'gcm',
     ks: 256,
     ts: 128,
     iter: 100000,
+    textformat,
     compression,
     burnafterreading,
     opendiscussion,
