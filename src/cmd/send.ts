@@ -72,8 +72,6 @@ export function NewSendCmd(): commander.Command {
       const randomKey = crypto.getRandomValues(new Uint8Array(32));
       const passPhrase = concatUint8Array(randomKey, stringToUint8Array(password));
 
-      
-
       const response = await sendCmdAction(text, passPhrase, args.url, {
         expire: args.expire,
         burnafterreading: args.burnafterreading ? 1 : 0,
