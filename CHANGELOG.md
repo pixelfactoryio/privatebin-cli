@@ -1,3 +1,15 @@
+# [2.5.0](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.4.0...v2.5.0) (2020-12-08)
+
+
+### Bug Fixes
+
+* **build:** merge tag 'v2.4.0' ([52f58b2](https://github.com/pixelfactoryio/privatebin-cli/commit/52f58b255fcb467df237484ebf2a07e41dde5559))
+
+
+### Features
+
+* publish next ([7dd818f](https://github.com/pixelfactoryio/privatebin-cli/commit/7dd818f6ca024a4703bbd4550a20568d5ff9b879))
+
 # [2.4.0](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.3.1...v2.4.0) (2020-11-18)
 
 

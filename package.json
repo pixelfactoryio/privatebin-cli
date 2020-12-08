@@ -1,6 +1,6 @@
 {
   "name": "@pixelfactory/privatebin",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "homepage": "https://github.com/pixelfactoryio/privatebin-cli",
   "description": "a PrivateBin client written in typescript",
   "author": "Amine Benseddik <amine@pixelfactory.io>",
