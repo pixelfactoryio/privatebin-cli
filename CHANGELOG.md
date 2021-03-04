@@ -1,3 +1,10 @@
+## [2.5.1](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.5.0...v2.5.1) (2021-03-04)
+
+
+### Bug Fixes
+
+* upgrade commander from 6.2.0 to 6.2.1 ([#45](https://github.com/pixelfactoryio/privatebin-cli/issues/45)) ([f672eca](https://github.com/pixelfactoryio/privatebin-cli/commit/f672eca1dc03c9e40060dea2d292eb0f8d2c8ab7))
+
 # [2.5.0](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.4.0...v2.5.0) (2020-12-08)
 
 
