@@ -34,7 +34,7 @@ export class SendCmd extends commander.Command {
     this.action(this.run);
   }
 
-  private sendCmdAction = async (
+  private sendPaste = async (
     text: string,
     key: Uint8Array,
     url: string,
@@ -65,7 +65,7 @@ export class SendCmd extends commander.Command {
     const randomKey = crypto.getRandomValues(new Uint8Array(32));
     const passPhrase = concatUint8Array(randomKey, stringToUint8Array(password));
 
-    const response = await this.sendCmdAction(text, passPhrase, args.url, {
+    const response = await this.sendPaste(text, passPhrase, args.url, {
       expire: args.expire,
       burnafterreading: args.burnafterreading ? 1 : 0,
       opendiscussion: args.opendiscussion ? 1 : 0,

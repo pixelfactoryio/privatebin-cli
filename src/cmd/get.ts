@@ -14,7 +14,7 @@ export class GetCmd extends commander.Command {
     this.action(this.run);
   }
 
-  private getCmdAction = async (pasteUrl: string, password: string): Promise<PrivatebinPaste> => {
+  private getPaste = async (pasteUrl: string, password: string): Promise<PrivatebinPaste> => {
     const u = new URL(pasteUrl);
     const id = u.search.substring(1);
     const key = u.hash.substring(1);
@@ -34,10 +34,10 @@ export class GetCmd extends commander.Command {
     }
 
     try {
-      this.print(await this.getCmdAction(url, password));
+      this.print(await this.getPaste(url, password));
     } catch (err) {
       if (err.message === 'Unsupported state or unable to authenticate data') {
-        this.print(await this.getCmdAction(url, await readPassword()));
+        this.print(await this.getPaste(url, await readPassword()));
       } else {
         throw err;
       }

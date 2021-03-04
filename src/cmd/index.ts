@@ -5,15 +5,15 @@ import chalk from 'chalk';
 import pjson from 'pjson';
 import fs from 'fs';
 
-import { NewSendCmd } from './send';
-import { NewGetCmd } from './get';
+import { SendCmd } from './send';
+import { GetCmd } from './get';
 
 class CLI extends Command {
   constructor() {
     super('privatebin');
     this.version(pjson.version);
-    this.addCommand(NewSendCmd());
-    this.addCommand(NewGetCmd());
+    this.addCommand(new SendCmd());
+    this.addCommand(new GetCmd());
   }
 
   public run = async () => {
