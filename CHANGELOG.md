@@ -1,3 +1,10 @@
+# [2.6.0](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.5.2...v2.6.0) (2021-03-04)
+
+
+### Features
+
+* **format:** add markdown support ([#40](https://github.com/pixelfactoryio/privatebin-cli/issues/40)) ([28320c5](https://github.com/pixelfactoryio/privatebin-cli/commit/28320c5b123a3d5d948831a91f0701b56b38c739))
+
 ## [2.5.2](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.5.1...v2.5.2) (2021-03-04)
 
 
