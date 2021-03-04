@@ -94,3 +94,6 @@ typings/
 # Build directory
 build
 dist
+
+# husky
+.husky
