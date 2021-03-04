@@ -26,6 +26,7 @@ Options:
   --burnafterreading      burn after reading (default: false)
   --opendiscussion        open discussion (default: false)
   --compression <string>  use compression [zlib, none] (default: "zlib")
+  --textformat <string>   text format [plaintext, markdown] for the input
   -p, --password          prompt for password (default: false)
   -u, --url <string>      privateBin host (default: "https://privatebin.net")
   -o, --output <string>   output format [text, json, yaml] (default: "text")

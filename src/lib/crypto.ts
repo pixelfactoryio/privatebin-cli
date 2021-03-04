@@ -46,7 +46,7 @@ export async function encrypt(
 
   const adata: PrivatebinAdata = [
     [bytesToBase64(iv), bytesToBase64(salt), spec.iter, spec.ks, spec.ts, spec.algo, spec.mode, spec.compression],
-    'plaintext',
+    spec.textformat,
     spec.opendiscussion,
     spec.burnafterreading,
   ];

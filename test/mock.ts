@@ -47,6 +47,7 @@ export const opts: PrivatebinOptions = {
   opendiscussion: 0,
   output: 'text',
   compression: 'zlib',
+  textformat: 'plaintext',
 };
 
 export const spec: PrivatebinSpec = {
@@ -58,6 +59,7 @@ export const spec: PrivatebinSpec = {
   compression: 'zlib',
   burnafterreading: 0,
   opendiscussion: 0,
+  textformat: 'plaintext',
 };
 
 export const key = '5DMz3GsHsNmaQhSaH9ej8nvvpCdxTxpvMtLP7XQLjxns';

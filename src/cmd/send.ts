@@ -55,6 +55,7 @@ export function NewSendCmd(): commander.Command {
     .option('--burnafterreading', 'burn after reading', false)
     .option('--opendiscussion', 'open discussion', false)
     .option('--compression <string>', 'use compression [zlib, none]', 'zlib')
+    .option('--textformat <string>', 'text format [plaintext, markdown] for the input', 'plaintext')
     .option('-p, --password', 'prompt for password', false)
     .option('-u, --url <string>', 'privateBin host', 'https://privatebin.net')
     .option('-o, --output <string>', 'output format [text, json, yaml]', validateOutput, 'text')
@@ -76,6 +77,7 @@ export function NewSendCmd(): commander.Command {
         burnafterreading: args.burnafterreading ? 1 : 0,
         opendiscussion: args.opendiscussion ? 1 : 0,
         output: args.output,
+        textformat: args.textformat,
         compression: args.compression,
       });
 
