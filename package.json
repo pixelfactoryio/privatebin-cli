@@ -45,7 +45,8 @@
     "build:test": "npm run build:test-cjs && npm run build:test-esm",
     "build:test-cjs": "node test-build-cjs.js",
     "build:test-esm": "node test-build-esm.mjs",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "prepare": "husky install"
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -93,7 +94,7 @@
   },
   "husky": {
     "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+      "commit-msg": "npx --no-install commitlint --edit $1"
     }
   },
   "release": {
