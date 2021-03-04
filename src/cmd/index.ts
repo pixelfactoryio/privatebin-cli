@@ -1,30 +1,38 @@
 #!/usr/bin/env node
 
-import commander from 'commander';
+import { Command } from 'commander';
 import chalk from 'chalk';
 import pjson from 'pjson';
 import fs from 'fs';
 
-import { NewSendCmd } from './send';
-import { NewGetCmd } from './get';
+import { SendCmd } from './send';
+import { GetCmd } from './get';
 
-function CLI(process: NodeJS.Process, version: string): Promise<commander.Command> {
-  const program = new commander.Command();
-
-  program.name('privatebin').version(version);
-  program.addCommand(NewSendCmd());
-  program.addCommand(NewGetCmd());
-
-  if (process.stdin.isTTY) {
-    return program.parseAsync(process.argv);
-  } else {
-    const stdinBuf = fs.readFileSync(0); // STDIN_FILENO = 0
-    process.argv.push(stdinBuf.toString('utf8').trim());
-    return program.parseAsync(process.argv);
+class CLI extends Command {
+  constructor() {
+    super('privatebin');
+    this.version(pjson.version);
+    this.addCommand(new SendCmd());
+    this.addCommand(new GetCmd());
   }
+
+  public run = async () => {
+    if (process.stdin.isTTY) {
+      return this.parseAsync(process.argv);
+    } else {
+      const stdinBuf = fs.readFileSync(0); // STDIN_FILENO = 0
+      process.argv.push(stdinBuf.toString('utf8').trim());
+      return this.parseAsync(process.argv);
+    }
+  };
 }
 
-CLI(process, pjson.version).catch((error) => {
-  process.stderr.write(chalk`{red ERROR:} ${error.message}\n`);
-  process.exit(1);
-});
+(async () => {
+  const c = new CLI();
+  try {
+    c.run();
+  } catch (e) {
+    process.stderr.write(chalk`{red ERROR:} ${e.message}\n`);
+    process.exit(1);
+  }
+})();
