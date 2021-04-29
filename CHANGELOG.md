@@ -1,3 +1,10 @@
+## [2.6.1](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.6.0...v2.6.1) (2021-04-29)
+
+
+### Bug Fixes
+
+* package.json & package-lock.json to reduce vulnerabilities ([#50](https://github.com/pixelfactoryio/privatebin-cli/issues/50)) ([b170ff2](https://github.com/pixelfactoryio/privatebin-cli/commit/b170ff20ad5eb65fad612c13b5c1caeddda17a77))
+
 # [2.6.0](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.5.2...v2.6.0) (2021-03-04)
 
 
