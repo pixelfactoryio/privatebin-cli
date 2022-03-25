@@ -46,7 +46,8 @@
     "build:test-cjs": "node test-build-cjs.js",
     "build:test-esm": "node test-build-esm.mjs",
     "semantic-release": "semantic-release",
-    "prepare": "husky install"
+    "prepare": "npm run snyk-protect && husky install",
+    "snyk-protect": "snyk-protect"
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -58,7 +59,8 @@
     "isomorphic-webcrypto": "^2.3.8",
     "pako": "^2.0.3",
     "pjson": "^1.0.9",
-    "yaml": "^1.10.0"
+    "yaml": "^1.10.0",
+    "@snyk/protect": "latest"
   },
   "devDependencies": {
     "@commitlint/cli": "^12.0.1",
@@ -118,5 +120,6 @@
         }
       ]
     ]
-  }
+  },
+  "snyk": true
 }
