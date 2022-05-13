@@ -84,12 +84,14 @@ npm install @pixelfactory/privatebin
 
 ```javascript
 import { PrivatebinClient } from '@pixelfactory/privatebin';
-
-const privatebin = new PrivatebinClient();
+import { encode } from 'bs58';
+const urlPrivatebin = 'https://privatebin.net'
+const privatebin = new PrivatebinClient(urlPrivatebin);
 const key = crypto.getRandomValues(new Uint8Array(32));
 const msg = 'Hello World!';
 
 const opts = {
+  textformat: 'plaintext',
   expire: '5min',
   burnafterreading: 0,
   opendiscussion: 0,
@@ -98,5 +100,5 @@ const opts = {
 };
 
 const paste = privatebin.sendText(msg, key, opts);
-console.log(paste);
+console.log(urlPrivatebin + paste.url + '#' + encode(key))
 ```
