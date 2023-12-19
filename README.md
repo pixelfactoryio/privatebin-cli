@@ -53,6 +53,12 @@ pasteURL: https://privatebin.net/?649aa8c062d4ed4d#Gt3NoxrGF8Tck5j9bBrsuFjbEaCyE
 deleteURL: https://privatebin.net/?pasteid=649aa8c062d4ed4d&deletetoken=b2dae42a762cf0b5e1dbf1fd5113356ba370218091668950c7f6a2d181a07ac6
 ```
 
+... or send a file with pipe to your own instance
+
+```bash
+cat README.md | privatebin send --url https://privatebin.your.domaine -o json -e 5min
+```
+
 ### Get command
 
 ```bash
