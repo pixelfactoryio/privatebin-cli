@@ -49,7 +49,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^1.6.3",
     "bs58": "^4.0.1",
     "byte-base64": "^1.1.0",
     "chalk": "^4.1.0",
