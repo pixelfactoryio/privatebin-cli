@@ -1,3 +1,10 @@
+## [2.6.2](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.6.1...v2.6.2) (2024-12-11)
+
+
+### Bug Fixes
+
+* update dependencies to reduce vulnerabilities ([acc7233](https://github.com/pixelfactoryio/privatebin-cli/commit/acc72335d15bcdad379187a8b03096bbe0b5eb70))
+
 ## [2.6.1](https://github.com/pixelfactoryio/privatebin-cli/compare/v2.6.0...v2.6.1) (2021-04-29)
 
 
