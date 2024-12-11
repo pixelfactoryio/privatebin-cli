@@ -1,33 +1,31 @@
-import commander from 'commander';
+import { Command, Option } from 'commander';
 import chalk from 'chalk';
 import YAML from 'yaml';
 import crypto from 'isomorphic-webcrypto';
-import { encode } from 'bs58';
+import bs58 from 'bs58';
 
 import { readPassword } from './utils';
 import { concatUint8Array, stringToUint8Array } from '../lib/crypto';
 import { PrivatebinClient } from '../lib/privatebin';
 import { PrivatebinResponse, PrivatebinOutput, PrivatebinOptions } from '../lib/types';
 
-export class SendCmd extends commander.Command {
+export class SendCmd extends Command {
   constructor() {
     super('send');
-    this.arguments('send <text>');
+    this.arguments('<text>');
     this.description('Send a text to privatebin');
 
     const options = [
-      new commander.Option('-e, --expire <string>', 'paste expire time')
+      new Option('-e, --expire <string>', 'paste expire time')
         .default('1week')
         .choices(['5min', '10min', '1hour', '1day', '1week', '1month', '1year', 'never']),
-      new commander.Option('--burnafterreading', 'burn after reading').default(false),
-      new commander.Option('--opendiscussion', 'open discussion').default(false),
-      new commander.Option('--compression <string>', 'use compression').choices(['zlib', 'none']).default('zlib'),
-      new commander.Option('--textformat <string>', 'text format')
-        .default('plaintext')
-        .choices(['plaintext', 'markdown']),
-      new commander.Option('-p, --password', 'prompt for password').default(false),
-      new commander.Option('-u, --url <string>', 'privateBin host').default('https://privatebin.net'),
-      new commander.Option('-o, --output <string>', 'output format').default('text').choices(['text', 'json', 'yaml']),
+      new Option('--burnafterreading', 'burn after reading').default(false),
+      new Option('--opendiscussion', 'open discussion').default(false),
+      new Option('--compression <string>', 'use compression').choices(['zlib', 'none']).default('zlib'),
+      new Option('--textformat <string>', 'text format').default('plaintext').choices(['plaintext', 'markdown']),
+      new Option('-p, --password', 'prompt for password').default(false),
+      new Option('-u, --url <string>', 'privateBin host').default('https://privatebin.net'),
+      new Option('-o, --output <string>', 'output format').default('text').choices(['text', 'json', 'yaml']),
     ];
 
     options.forEach((option) => this.addOption(option));
@@ -47,12 +45,24 @@ export class SendCmd extends commander.Command {
   private formatResponse = (response: PrivatebinResponse, host: string, randomKey: Uint8Array): PrivatebinOutput => {
     return {
       pasteId: response.id,
-      pasteURL: `${host}${response.url}#${encode(randomKey)}`,
+      pasteURL: `${host}${response.url}#${bs58.encode(randomKey)}`,
       deleteURL: `${host}/?pasteid=${response.id}&deletetoken=${response.deletetoken}`,
     };
   };
 
-  public run = async (text: string, args: any): Promise<void> => {
+  public run = async (
+    text: string,
+    args: {
+      password: boolean;
+      burnafterreading: boolean;
+      opendiscussion: boolean;
+      expire: '5min' | '10min' | '1hour' | '1day' | '1week' | '1month' | '1year' | 'never';
+      compression: 'zlib' | 'none';
+      textformat: 'plaintext' | 'markdown';
+      output: 'text' | 'json' | 'yaml';
+      url: string;
+    },
+  ): Promise<void> => {
     if (args.burnafterreading && args.opendiscussion) {
       throw new Error("You can't use --opendiscussion with --burnafterreading flag");
     }
@@ -84,9 +94,9 @@ export class SendCmd extends commander.Command {
         process.stdout.write(`${YAML.stringify(paste)}\n`);
         break;
       default:
-        process.stdout.write(chalk`{bold pasteId:} ${paste.pasteId}\n`);
-        process.stdout.write(chalk`{bold pasteURL:} {greenBright ${paste.pasteURL}}\n`);
-        process.stdout.write(chalk`{bold deleteURL:} {gray ${paste.deleteURL}}\n`);
+        process.stdout.write(chalk.bold(`pasteId: ${paste.pasteId}\n`));
+        process.stdout.write(chalk.bold(`pasteURL: ${chalk.green(paste.pasteURL)}\n`));
+        process.stdout.write(chalk.bold(`deleteURL: ${chalk.gray(paste.deleteURL)}\n`));
     }
   };
 }

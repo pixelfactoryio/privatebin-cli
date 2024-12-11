@@ -32,7 +32,11 @@ class CLI extends Command {
   try {
     c.run();
   } catch (e) {
-    process.stderr.write(chalk`{red ERROR:} ${e.message}\n`);
+    if (e instanceof Error) {
+      process.stderr.write(chalk`{red ERROR:} ${e.message}\n`);
+    } else {
+      process.stderr.write(chalk`{red ERROR:} ${String(e)}\n`);
+    }
     process.exit(1);
   }
 })();

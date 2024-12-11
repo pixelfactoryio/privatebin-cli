@@ -51,10 +51,8 @@ export class PrivatebinClient extends Api {
     const apiConfig: AxiosRequestConfig = {
       baseURL: baseURL,
       headers: {
-        common: {
-          'Content-Type': 'application/json',
-          'X-Requested-With': 'JSONHttpRequest',
-        },
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'JSONHttpRequest',
       },
     };
 

@@ -1,11 +1,12 @@
-import commander from 'commander';
-import { decode } from 'bs58';
+import { Command } from 'commander';
+import bs58 from 'bs58';
 
 import { PrivatebinClient } from '../lib';
 import { PrivatebinPaste } from '../lib';
 import { concatUint8Array, stringToUint8Array } from '../lib/crypto';
 import { readPassword } from './utils';
-export class GetCmd extends commander.Command {
+
+export class GetCmd extends Command {
   constructor() {
     super('get');
     this.arguments('<url>');
@@ -18,7 +19,7 @@ export class GetCmd extends commander.Command {
     const u = new URL(pasteUrl);
     const id = u.search.substring(1);
     const key = u.hash.substring(1);
-    const passPhrase = concatUint8Array(decode(key), stringToUint8Array(password));
+    const passPhrase = concatUint8Array(bs58.decode(key), stringToUint8Array(password));
     const privatebin = new PrivatebinClient(u.origin);
     return await privatebin.getText(id, passPhrase);
   };
@@ -27,7 +28,7 @@ export class GetCmd extends commander.Command {
     process.stderr.write(`${paste.paste}\n`);
   };
 
-  public run = async (url: string, args: any): Promise<void> => {
+  public run = async (url: string, args: { password: boolean }): Promise<void> => {
     let password = '';
     if (args.password) {
       password = await readPassword();
@@ -36,10 +37,10 @@ export class GetCmd extends commander.Command {
     try {
       this.print(await this.getPaste(url, password));
     } catch (err) {
-      if (err.message === 'Unsupported state or unable to authenticate data') {
+      if (err instanceof Error && err.message === 'Unsupported state or unable to authenticate data') {
         this.print(await this.getPaste(url, await readPassword()));
       } else {
-        throw err;
+        this.error(String(err));
       }
     }
   };
