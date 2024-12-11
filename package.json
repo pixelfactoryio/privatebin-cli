@@ -33,7 +33,7 @@
   ],
   "license": "MIT",
   "scripts": {
-    "lint": "eslint -c .eslintrc.js --ext .ts src",
+    "lint": "eslint src",
     "lintfix": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "test": "tap --timeout=300 --invert --grep=build",
     "posttest": "tap --coverage-report=text-lcov > coverage.out",
@@ -63,6 +63,8 @@
   "devDependencies": {
     "@commitlint/cli": "^19.6.0",
     "@commitlint/config-conventional": "^19.6.0",
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.16.0",
     "@rollup/plugin-commonjs": "^28.0.1",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.3.0",
@@ -81,16 +83,18 @@
     "eslint": "^9.16.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.13.0",
     "husky": "^9.1.7",
     "nock": "^13.5.6",
-    "prettier": "^3.4.2",
+    "prettier": "3.4.2",
     "rimraf": "^6.0.1",
     "rollup": "^4.28.1",
     "rollup-plugin-preserve-shebang": "^1.0.1",
     "semantic-release": "^24.2.0",
     "tap": "^21.0.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.0"
   },
   "husky": {
     "hooks": {

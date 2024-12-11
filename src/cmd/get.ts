@@ -28,7 +28,7 @@ export class GetCmd extends Command {
     process.stderr.write(`${paste.paste}\n`);
   };
 
-  public run = async (url: string, args: any): Promise<void> => {
+  public run = async (url: string, args: { password: boolean }): Promise<void> => {
     let password = '';
     if (args.password) {
       password = await readPassword();
@@ -40,7 +40,7 @@ export class GetCmd extends Command {
       if (err instanceof Error && err.message === 'Unsupported state or unable to authenticate data') {
         this.print(await this.getPaste(url, await readPassword()));
       } else {
-        throw err;
+        this.error(String(err));
       }
     }
   };

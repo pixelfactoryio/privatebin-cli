@@ -8,7 +8,6 @@ import { readPassword } from './utils';
 import { concatUint8Array, stringToUint8Array } from '../lib/crypto';
 import { PrivatebinClient } from '../lib/privatebin';
 import { PrivatebinResponse, PrivatebinOutput, PrivatebinOptions } from '../lib/types';
-import { exit } from 'process';
 
 export class SendCmd extends Command {
   constructor() {
@@ -51,7 +50,19 @@ export class SendCmd extends Command {
     };
   };
 
-  public run = async (text: string, args: any): Promise<void> => {
+  public run = async (
+    text: string,
+    args: {
+      password: boolean;
+      burnafterreading: boolean;
+      opendiscussion: boolean;
+      expire: '5min' | '10min' | '1hour' | '1day' | '1week' | '1month' | '1year' | 'never';
+      compression: 'zlib' | 'none';
+      textformat: 'plaintext' | 'markdown';
+      output: 'text' | 'json' | 'yaml';
+      url: string;
+    },
+  ): Promise<void> => {
     if (args.burnafterreading && args.opendiscussion) {
       throw new Error("You can't use --opendiscussion with --burnafterreading flag");
     }
