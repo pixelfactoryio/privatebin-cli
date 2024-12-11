@@ -3,7 +3,7 @@ name: Publish release
 on:
   push:
     branches:
-      - master
+      - main
       - next
 
 jobs:
@@ -22,7 +22,7 @@ jobs:
           node-version: 22
 
       - name: Install dependencies
-        run: npm ci --no-optional
+        run: npm ci --omit=optional
 
       - name: Run linter
         run: npm run lint
