@@ -1,11 +1,8 @@
-import { prompt } from 'inquirer';
+import { password } from '@inquirer/prompts';
 
 export async function readPassword(): Promise<string> {
-  const answer = await prompt({
-    type: 'password',
+  const answer = await password({
     message: 'Password?',
-    mask: '*',
-    name: 'password',
   });
-  return answer.password;
+  return answer;
 }
