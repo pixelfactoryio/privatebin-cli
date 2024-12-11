@@ -36,7 +36,7 @@ export class GetCmd extends commander.Command {
     try {
       this.print(await this.getPaste(url, password));
     } catch (err) {
-      if (err.message === 'Unsupported state or unable to authenticate data') {
+      if (err instanceof Error && err.message === 'Unsupported state or unable to authenticate data') {
         this.print(await this.getPaste(url, await readPassword()));
       } else {
         throw err;
